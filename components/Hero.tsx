@@ -176,7 +176,7 @@ export default function Hero() {
               }}
             >
               <Image
-                src="/raft/bild1.jpg"
+                src="/raft/Bretter.png"
                 alt="Bretter am Ufer"
                 width={1400}
                 height={1700}

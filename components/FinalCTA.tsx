@@ -15,11 +15,11 @@ export default function FinalCTA() {
       {/* Background image */}
       <div className="absolute inset-0 pointer-events-none">
         <Image
-          src="/raft/bild4.jpg"
+          src="/raft/Yacht2.png"
           alt=""
           fill
           sizes="100vw"
-          style={{ objectFit: "cover", opacity: 0.35 }}
+          style={{ objectFit: "cover", opacity: 0.4 }}
         />
         <div
           className="absolute inset-0"

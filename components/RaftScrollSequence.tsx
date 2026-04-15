@@ -19,35 +19,35 @@ type Slide = {
 
 const SLIDES: Slide[] = [
   {
-    poster: "/raft/bild1.jpg",
-    video: "/raft/video1.mp4",
-    eyebrow: "Ausgangspunkt",
-    headline: "Skills ohne System.",
-    sub: "Talent ist da. Was fehlt, ist die Reihenfolge.",
+    poster: "/raft/Bretter.png",
+    video: "/raft/Bretter-zu-Floss.mp4",
+    eyebrow: "Bretter",
+    headline: "Genug Material. Kein Plan.",
+    sub: "Skills, Erfahrung, Netzwerk — alles da. Was fehlt, ist die Reihenfolge.",
     facts: [
-      { Icon: BoardsIcon, label: "Viele Fähigkeiten" },
+      { Icon: BoardsIcon, label: "Material vorhanden" },
       { Icon: FragmentIcon, label: "Kein roter Faden" },
-      { Icon: WaveIcon, label: "Kein Tempo" },
+      { Icon: WaveIcon, label: "Kein System" },
     ],
   },
   {
-    poster: "/raft/bild2.jpg",
-    video: "/raft/video2.mp4",
-    eyebrow: "Bewegung",
+    poster: "/raft/Floss.png",
+    video: "/raft/floss-zu-ruder.mp4",
+    eyebrow: "Floß",
     headline: "Schon im Wasser. Aber treibend.",
-    sub: "Aktivität ist nicht Fortschritt. Schwimmen ist nicht steuern.",
+    sub: "Du schwimmst. Du networkst. Du hoffst. Bewegung ist noch keine Richtung.",
     facts: [
-      { Icon: SwimmerIcon, label: "Viel Bewegung" },
+      { Icon: SwimmerIcon, label: "Viel Aktivität" },
       { Icon: CompassFadeIcon, label: "Keine Richtung" },
       { Icon: HourglassIcon, label: "Energie verloren" },
     ],
   },
   {
-    poster: "/raft/bild3.jpg",
-    video: "/raft/video3.mp4",
-    eyebrow: "Richtung",
+    poster: "/raft/Ruder.png",
+    video: "/raft/Ruder-zu-Motor.mp4",
+    eyebrow: "Ruder",
     headline: "Zuerst die Richtung.",
-    sub: "Positionierung ist nicht was du machst — sondern wohin du gehst.",
+    sub: "Positionierung ist nicht was du machst — sondern wohin du gehst und für wen.",
     facts: [
       { Icon: CompassIcon, label: "Klare Position" },
       { Icon: TargetIcon, label: "Eine Zielgruppe" },
@@ -55,11 +55,11 @@ const SLIDES: Slide[] = [
     ],
   },
   {
-    poster: "/raft/bild4.jpg",
-    video: "/raft/video4.mp4",
-    eyebrow: "Geschwindigkeit",
+    poster: "/raft/Floss.png",
+    video: "/raft/Floss-zu-Yacht2.mp4",
+    eyebrow: "Skala",
     headline: "Dann erst der Motor.",
-    sub: "Wenn alles trägt, macht Tempo Sinn. Vorher ist es nur schneller verloren.",
+    sub: "Wenn Ruder und Fundament stehen, macht Tempo Sinn. Aus dem Floß wird die Yacht.",
     facts: [
       { Icon: BoltIcon, label: "Planbare Akquise" },
       { Icon: ArrowIcon, label: "Konstantes Tempo" },
@@ -114,25 +114,52 @@ export default function RaftScrollSequence() {
   const idx = Math.min(N - 1, Math.max(0, Math.floor(stepFloat)));
   const sub = clamp01(stepFloat - idx);
 
-  // Auto-play active video, pause + reset others
+  // Refs for scroll-scrubbing the active video
   const videoRefs = useRef<Array<HTMLVideoElement | null>>(
     Array(N).fill(null),
   );
+
+  // Bind active video.currentTime to scroll sub-progress (Apple-style scrubbing)
+  useEffect(() => {
+    if (!isDesktop) return;
+    const v = videoRefs.current[idx];
+    if (!v) return;
+
+    const seek = () => {
+      if (!v.duration || isNaN(v.duration) || !isFinite(v.duration)) return;
+      const target = sub * v.duration;
+      // Clamp so we don't ever request beyond the buffered end frame
+      const safe = Math.min(v.duration - 0.05, Math.max(0, target));
+      // Only update if different enough (avoid spamming the decoder)
+      if (Math.abs(v.currentTime - safe) > 0.04) {
+        try {
+          v.currentTime = safe;
+        } catch {
+          /* noop */
+        }
+      }
+    };
+
+    if (v.readyState >= 1) {
+      seek();
+    } else {
+      const onMeta = () => {
+        seek();
+        v.removeEventListener("loadedmetadata", onMeta);
+      };
+      v.addEventListener("loadedmetadata", onMeta);
+      return () => v.removeEventListener("loadedmetadata", onMeta);
+    }
+  }, [sub, idx, isDesktop]);
+
+  // Pause inactive videos (don't reset, so seek state is preserved)
   useEffect(() => {
     if (!isDesktop) return;
     videoRefs.current.forEach((v, i) => {
       if (!v) return;
-      if (i === idx) {
-        const playPromise = v.play();
-        if (playPromise && typeof playPromise.catch === "function") {
-          playPromise.catch(() => {
-            // Autoplay blocked — poster still shows. No-op.
-          });
-        }
-      } else {
-        v.pause();
+      if (i !== idx) {
         try {
-          v.currentTime = 0;
+          v.pause();
         } catch {
           /* noop */
         }
@@ -238,33 +265,39 @@ export default function RaftScrollSequence() {
       >
         {/* ── MEDIA STACK ── */}
         {SLIDES.map((s, i) => {
-          // image opacity follows step, but with a smooth crossfade window
           const isActive = i === idx;
-          // Image stays at scale 1 when active, slightly zoomed when leaving
-          const imgOpacity = isActive ? 1 : 0;
           return (
             <div
-              key={s.poster}
+              key={`${s.poster}-${i}`}
               className="absolute inset-0"
               style={{
-                opacity: imgOpacity,
+                opacity: isActive ? 1 : 0,
                 transition:
-                  "opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 1200ms cubic-bezier(0.16, 1, 0.3, 1)",
-                transform: isActive ? "scale(1)" : "scale(1.05)",
+                  "opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 1400ms cubic-bezier(0.16, 1, 0.3, 1)",
+                transform: isActive ? "scale(1)" : "scale(1.06)",
                 willChange: "opacity, transform",
               }}
             >
-              {/* video first, poster (still) is its fallback */}
+              {/* Optimized poster (next/image → AVIF/WebP). Stays visible
+                  underneath the video, so loading flicker is invisible. */}
+              <Image
+                src={s.poster}
+                alt={s.headline}
+                fill
+                priority={i === 0}
+                sizes="100vw"
+                style={{ objectFit: "cover" }}
+              />
+              {/* Scroll-scrubbed video on top. Transparent until it has
+                  data, so the poster shows during the network round-trip. */}
               <video
                 ref={(el) => {
                   videoRefs.current[i] = el;
                 }}
-                poster={s.poster}
                 muted
                 playsInline
-                loop
-                preload="metadata"
-                className="w-full h-full"
+                preload="auto"
+                className="absolute inset-0 w-full h-full"
                 style={{ objectFit: "cover" }}
               >
                 {s.video ? <source src={s.video} type="video/mp4" /> : null}

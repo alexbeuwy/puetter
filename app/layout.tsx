@@ -35,10 +35,7 @@ export default function RootLayout({
   return (
     <html lang="de" className={`${serif.variable} ${sans.variable}`}>
       <head>
-        <link rel="preload" as="image" href="/raft/bild1.jpg" />
-        <link rel="preload" as="image" href="/raft/bild2.jpg" />
-        <link rel="preload" as="image" href="/raft/bild3.jpg" />
-        <link rel="preload" as="image" href="/raft/bild4.jpg" />
+        <link rel="preload" as="image" href="/raft/Bretter.png" />
       </head>
       <body>
         {children}
