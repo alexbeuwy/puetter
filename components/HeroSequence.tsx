@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useScrollProgress } from "@/hooks/useScrollProgress";
 import VoiceNote from "./VoiceNote";
 
@@ -68,13 +67,25 @@ const CHAPTERS: Chapter[] = [
   },
 ];
 
-const FRAME_URLS: string[] = (() => {
+const FRAME_URLS_LG: string[] = (() => {
   const urls: string[] = [];
   for (let c = 1; c <= CHAPTER_COUNT; c++) {
     for (let f = 1; f <= FRAMES_PER_CHAPTER; f++) {
       const cc = String(c).padStart(2, "0");
       const ff = String(f).padStart(3, "0");
       urls.push(`/raft/seq/${cc}/frame-${ff}.jpg`);
+    }
+  }
+  return urls;
+})();
+
+const FRAME_URLS_SM: string[] = (() => {
+  const urls: string[] = [];
+  for (let c = 1; c <= CHAPTER_COUNT; c++) {
+    for (let f = 1; f <= FRAMES_PER_CHAPTER; f++) {
+      const cc = String(c).padStart(2, "0");
+      const ff = String(f).padStart(3, "0");
+      urls.push(`/raft/seq-sm/${cc}/frame-${ff}.jpg`);
     }
   }
   return urls;
@@ -94,7 +105,6 @@ const flyY = (s: number, ia: number, ib: number, max = 40) =>
 /* ─────────────────────────  COMPONENT  ───────────────────────── */
 
 export default function HeroSequence() {
-  const isDesktop = useMediaQuery("(min-width: 768px)");
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
@@ -154,15 +164,22 @@ export default function HeroSequence() {
     requestAnimationFrame(animate);
   }, [drawCurrent]);
 
-  // Mount: preload all frames + setup canvas
+  // Mount: preload all frames + setup canvas.
+  // Pick the small set on narrow viewports, the large set otherwise —
+  // iOS Safari has a ~384 MB decoded-bitmap ceiling, so the 1280w set
+  // would blow the budget (~1 GB decoded) on phones.
   useEffect(() => {
-    if (!isDesktop) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     let mounted = true;
+
+    const urls =
+      typeof window !== "undefined" && window.innerWidth < 768
+        ? FRAME_URLS_SM
+        : FRAME_URLS_LG;
 
     const resize = () => {
       const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -180,7 +197,7 @@ export default function HeroSequence() {
 
     // Preload all frames
     let loadedCount = 0;
-    imagesRef.current = FRAME_URLS.map((src, i) => {
+    imagesRef.current = urls.map((src, i) => {
       const img = new window.Image();
       img.decoding = "async";
       img.onload = () => {
@@ -208,17 +225,16 @@ export default function HeroSequence() {
       mounted = false;
       window.removeEventListener("resize", resize);
     };
-  }, [isDesktop, drawCurrent]);
+  }, [drawCurrent]);
 
   // Drive target from scroll
   useEffect(() => {
-    if (!isDesktop) return;
     stateRef.current.target = progress * (TOTAL_FRAMES - 1);
     if (!stateRef.current.running) {
       stateRef.current.running = true;
       requestAnimationFrame(animate);
     }
-  }, [progress, isDesktop, animate]);
+  }, [progress, animate]);
 
   const stepFloat = progress * CHAPTER_COUNT;
   const idx = Math.min(
@@ -246,61 +262,6 @@ export default function HeroSequence() {
   const f3O = fadeWin(sub, 0.44, 0.62);
   const f3Y = flyY(sub, 0.44, 0.62, 24);
 
-  /* ── MOBILE FALLBACK ── */
-  if (!isDesktop) {
-    return (
-      <section
-        id="top"
-        className="relative min-h-[100dvh] flex flex-col justify-center px-6 pt-32 pb-16"
-        style={{
-          background:
-            "linear-gradient(180deg, var(--sky) 0%, var(--cream) 100%)",
-        }}
-      >
-        <span className="eyebrow">Für Selbstständige & Unternehmer</span>
-        <h1 className="h1 font-serif max-w-[14ch]">
-          <span className="block font-serif-italic">Du hast genug Bretter.</span>
-          <span className="block" style={{ color: "var(--wood)" }}>
-            Zeit, ein Floß draus zu bauen.
-          </span>
-        </h1>
-        <p
-          className="mt-8 max-w-[50ch]"
-          style={{ color: "var(--text-muted)", fontSize: 17, lineHeight: 1.65 }}
-        >
-          Planbar Kunden gewinnen, klare Richtung, und ein System das
-          funktioniert — auch wenn du schläfst, auch wenn sich die Welt gerade
-          wieder neu erfindet.
-        </p>
-        <div className="mt-8">
-          <Image
-            src="/raft/seq/01/frame-001.jpg"
-            alt="Bretter"
-            width={1280}
-            height={714}
-            priority
-            sizes="100vw"
-            style={{
-              width: "100%",
-              height: "auto",
-              borderRadius: 24,
-              boxShadow: "0 40px 80px -30px rgba(92,61,46,0.4)",
-            }}
-          />
-        </div>
-        <div className="mt-8 flex flex-col gap-3">
-          <a href="#kontakt" className="btn-primary">
-            Gespräch anfragen →
-          </a>
-          <a href="#story" className="btn-ghost">
-            Die Geschichte dahinter ↓
-          </a>
-        </div>
-      </section>
-    );
-  }
-
-  /* ── DESKTOP: CANVAS SCROLL SEQUENCE ── */
   return (
     <section
       id="top"
@@ -350,9 +311,9 @@ export default function HeroSequence() {
         />
 
         {/* Top bar: eyebrow + progress + counter */}
-        <div className="absolute top-0 left-0 right-0 px-8 md:px-14 pt-24 md:pt-28 flex items-center gap-6 z-30">
+        <div className="absolute top-0 left-0 right-0 px-5 md:px-14 pt-24 md:pt-28 flex items-center gap-3 md:gap-6 z-30">
           <span
-            className="text-[11px] tracking-[0.22em] uppercase flex-shrink-0"
+            className="hidden sm:inline text-[11px] tracking-[0.22em] uppercase flex-shrink-0"
             style={{ color: "rgba(245,237,216,0.75)" }}
           >
             Für Selbstständige & Unternehmer
@@ -378,8 +339,8 @@ export default function HeroSequence() {
           </span>
         </div>
 
-        {/* Left vertical chapter rail */}
-        <div className="absolute left-8 md:left-14 top-1/2 -translate-y-1/2 flex flex-col gap-5 z-30">
+        {/* Left vertical chapter rail — hidden on small screens */}
+        <div className="hidden md:flex absolute left-14 top-1/2 -translate-y-1/2 flex-col gap-5 z-30">
           {CHAPTERS.map((c, i) => {
             const isActive = i === idx;
             return (
@@ -427,13 +388,13 @@ export default function HeroSequence() {
 
         {/* Chapter content — bottom area */}
         <div
-          className="absolute inset-0 z-20 grid grid-cols-12 gap-6 px-8 md:px-14 pb-24 md:pb-24 pt-44 pointer-events-none"
+          className="absolute inset-0 z-20 grid grid-cols-12 gap-4 md:gap-6 px-5 md:px-14 pb-20 md:pb-24 pt-36 md:pt-44 pointer-events-none"
           style={{ alignContent: "end" }}
         >
           {/* Left: eyebrow + headline + sub */}
           <div className="col-span-12 md:col-span-7 md:col-start-2 flex flex-col justify-end">
             <div
-              className="flex items-center gap-3 mb-5"
+              className="flex items-center gap-3 mb-4 md:mb-5"
               style={{
                 opacity: eyebrowO,
                 transform: `translateY(${eyebrowY}px)`,
@@ -447,7 +408,7 @@ export default function HeroSequence() {
                 {String(idx + 1).padStart(2, "0")}
               </span>
               <span
-                className="w-12 h-[1px]"
+                className="w-10 h-[1px]"
                 style={{ background: "rgba(245,237,216,0.6)" }}
               />
               <span
@@ -459,9 +420,9 @@ export default function HeroSequence() {
             </div>
 
             <h1
-              className="font-serif leading-[1.02] tracking-tight max-w-[18ch]"
+              className="font-serif leading-[1.02] tracking-tight max-w-[14ch] md:max-w-[18ch]"
               style={{
-                fontSize: "clamp(48px, 7vw, 104px)",
+                fontSize: "clamp(38px, 9vw, 104px)",
                 color: "var(--cream)",
                 opacity: headO,
                 transform: `translateY(${headY}px)`,
@@ -478,9 +439,9 @@ export default function HeroSequence() {
             </h1>
 
             <p
-              className="mt-6 max-w-[48ch]"
+              className="mt-4 md:mt-6 max-w-[44ch]"
               style={{
-                fontSize: "clamp(16px, 1.3vw, 20px)",
+                fontSize: "clamp(14px, 1.3vw, 20px)",
                 lineHeight: 1.55,
                 color: "rgba(245,237,216,0.85)",
                 opacity: subO,
@@ -493,16 +454,17 @@ export default function HeroSequence() {
 
             {/* CTA group — reveals only at end */}
             <div
-              className="mt-8 flex flex-wrap items-center gap-3 pointer-events-auto"
+              className="mt-6 md:mt-8 flex flex-wrap items-center gap-2 md:gap-3 pointer-events-auto"
               style={{
                 opacity: ctaO,
                 transform: `translateY(${ctaY}px)`,
                 willChange: "opacity, transform",
+                pointerEvents: ctaO > 0.3 ? "auto" : "none",
               }}
             >
               <a
                 href="#kontakt"
-                className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium"
+                className="inline-flex items-center gap-2 rounded-full px-5 md:px-7 py-3 md:py-3.5 text-sm font-medium"
                 style={{
                   background: "var(--cream)",
                   color: "var(--wood)",
@@ -513,7 +475,7 @@ export default function HeroSequence() {
               </a>
               <a
                 href="#story"
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-medium"
+                className="hidden sm:inline-flex items-center gap-2 rounded-full px-5 md:px-6 py-3 md:py-3.5 text-sm font-medium"
                 style={{
                   background: "rgba(245,237,216,0.08)",
                   color: "var(--cream)",
@@ -523,14 +485,15 @@ export default function HeroSequence() {
               >
                 Die Geschichte dahinter ↓
               </a>
-              <div className="ml-2">
+              <div className="hidden md:block ml-2">
                 <VoiceNote label="30 Sek. von mir" />
               </div>
             </div>
           </div>
 
-          {/* Right: 3 fact pills, stacked */}
-          <div className="col-span-12 md:col-span-3 md:col-start-10 flex flex-col justify-end gap-3">
+          {/* Right: 3 fact pills. Stacked on desktop (right column),
+              horizontal row on mobile (below the copy). */}
+          <div className="col-span-12 md:col-span-3 md:col-start-10 flex md:flex-col justify-start md:justify-end gap-2 md:gap-3 mt-4 md:mt-0 overflow-x-auto md:overflow-visible no-scrollbar">
             {[
               { fact: active.facts[0], O: f1O, Y: f1Y },
               { fact: active.facts[1], O: f2O, Y: f2Y },
@@ -540,7 +503,7 @@ export default function HeroSequence() {
               return (
                 <div
                   key={`${idx}-${i}`}
-                  className="flex items-center gap-4 px-5 py-4 rounded-2xl backdrop-blur-md"
+                  className="flex-shrink-0 md:flex-shrink flex items-center gap-2 md:gap-4 px-3 md:px-5 py-2.5 md:py-4 rounded-full md:rounded-2xl backdrop-blur-md"
                   style={{
                     background: "rgba(245,237,216,0.12)",
                     border: "1px solid rgba(245,237,216,0.22)",
@@ -551,7 +514,7 @@ export default function HeroSequence() {
                   }}
                 >
                   <span
-                    className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center"
+                    className="flex-shrink-0 w-7 h-7 md:w-10 md:h-10 rounded-full flex items-center justify-center"
                     style={{
                       background: "var(--cream)",
                       color: "var(--wood)",
@@ -560,7 +523,7 @@ export default function HeroSequence() {
                     <F.Icon />
                   </span>
                   <span
-                    className="text-sm font-medium"
+                    className="text-[11px] md:text-sm font-medium whitespace-nowrap"
                     style={{ color: "var(--cream)" }}
                   >
                     {F.label}
