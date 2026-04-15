@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Drawer } from "vaul";
+import Logo from "./Logo";
 
 const LINKS = [
   { href: "#ueber-mich", label: "Über mich" },
@@ -41,9 +42,11 @@ export default function Nav() {
       >
         <a
           href="#top"
-          className="font-serif-italic text-text text-lg mr-2 md:mr-4"
+          aria-label="Pütter — zur Startseite"
+          className="flex items-center mr-2 md:mr-4 transition-opacity hover:opacity-80"
+          style={{ color: "var(--wood)" }}
         >
-          Pütter
+          <Logo className="h-[22px] w-auto" />
         </a>
 
         {/* Desktop links */}
@@ -106,11 +109,8 @@ export default function Nav() {
               </Drawer.Description>
               <div className="p-8 flex flex-col h-full">
                 <div className="flex items-center justify-between mb-16">
-                  <span
-                    className="font-serif-italic text-2xl"
-                    style={{ color: "var(--wood)" }}
-                  >
-                    Pütter
+                  <span style={{ color: "var(--wood)" }}>
+                    <Logo className="h-7 w-auto" />
                   </span>
                   <Drawer.Close asChild>
                     <button

@@ -1,6 +1,7 @@
 "use client";
 
 import FadeIn from "./FadeIn";
+import LogoMark from "./LogoMark";
 
 export default function OriginStory() {
   return (
@@ -121,14 +122,10 @@ export default function OriginStory() {
                 style={{
                   background: "var(--sand)",
                   border: "1px solid rgba(196,168,130,0.4)",
+                  color: "var(--wood)",
                 }}
               >
-                <span
-                  className="font-serif-italic text-5xl"
-                  style={{ color: "var(--wood)" }}
-                >
-                  P.
-                </span>
+                <LogoMark className="h-[60px] w-auto" />
               </div>
               <div>
                 <div className="font-medium">Pütter</div>

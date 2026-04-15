@@ -1,5 +1,7 @@
 "use client";
 
+import Logo from "./Logo";
+
 export default function Footer() {
   return (
     <footer
@@ -10,13 +12,14 @@ export default function Footer() {
         <div className="md:col-span-5">
           <a
             href="#top"
-            className="font-serif-italic text-4xl"
+            aria-label="Pütter — zur Startseite"
+            className="inline-flex items-center transition-opacity hover:opacity-80"
             style={{ color: "var(--cream)" }}
           >
-            Pütter
+            <Logo className="h-9 w-auto" />
           </a>
           <p
-            className="mt-4 max-w-[36ch] text-sm"
+            className="mt-6 max-w-[36ch] text-sm"
             style={{ color: "var(--rope)", lineHeight: 1.7 }}
           >
             Planbar Kunden gewinnen. Klare Richtung. Ein System, das trägt.
