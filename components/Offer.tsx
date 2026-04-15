@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import FadeIn from "./FadeIn";
+import TiltCard from "./TiltCard";
 
 const FEATURES = [
   {
@@ -135,19 +136,20 @@ export default function Offer() {
 
         {/* Right: CTA card */}
         <div className="md:col-span-5 md:sticky md:top-28 md:self-start">
-          <motion.div
-            initial={{ y: 40, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="relative p-10 md:p-12"
-            style={{
-              background: "var(--white)",
-              borderRadius: 32,
-              border: "1px solid rgba(92,61,46,0.12)",
-              boxShadow: "0 40px 80px -30px rgba(92,61,46,0.2)",
-            }}
-          >
+          <TiltCard className="relative" max={5} scale={1.008}>
+            <motion.div
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="relative p-10 md:p-12"
+              style={{
+                background: "var(--white)",
+                borderRadius: 32,
+                border: "1px solid rgba(92,61,46,0.12)",
+                boxShadow: "0 40px 80px -30px rgba(92,61,46,0.2)",
+              }}
+            >
             {/* Small animated dot */}
             <div className="flex items-center gap-2 mb-6">
               <motion.span
@@ -210,7 +212,8 @@ export default function Offer() {
                 </span>
               ))}
             </div>
-          </motion.div>
+            </motion.div>
+          </TiltCard>
         </div>
       </div>
     </section>

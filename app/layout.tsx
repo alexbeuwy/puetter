@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import { EB_Garamond, Rubik } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
-const serif = Instrument_Serif({
+const serif = EB_Garamond({
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-serif",
 });
 
-const sans = Plus_Jakarta_Sans({
+const sans = Rubik({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   display: "swap",
@@ -39,7 +40,23 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/raft/bild3.jpg" />
         <link rel="preload" as="image" href="/raft/bild4.jpg" />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "var(--cream)",
+              color: "var(--text)",
+              border: "1px solid rgba(196, 168, 130, 0.5)",
+              fontFamily: "var(--font-sans)",
+              borderRadius: 16,
+              boxShadow: "0 30px 60px -20px rgba(92,61,46,0.3)",
+            },
+            className: "puetter-toast",
+          }}
+        />
+      </body>
     </html>
   );
 }

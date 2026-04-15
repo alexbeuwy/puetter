@@ -2,21 +2,31 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { toast } from "sonner";
 import FadeIn from "./FadeIn";
 
 export default function LeadMagnet() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sent" | "error">("idle");
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !/.+@.+\..+/.test(email)) {
-      setStatus("error");
+      toast.error("Das sieht nach keiner gültigen Email aus.", {
+        description: "Versuch es nochmal.",
+      });
       return;
     }
-    // Placeholder handoff — replace with real endpoint later
-    setStatus("sent");
+    setLoading(true);
+    // Placeholder handoff — replace with real endpoint later.
+    // Simulate a short network round-trip so the toast feels earned.
+    await new Promise((r) => setTimeout(r, 600));
+    toast.success("PDF unterwegs.", {
+      description: `Check ${email} in den nächsten Minuten.`,
+      duration: 6000,
+    });
     setEmail("");
+    setLoading(false);
   };
 
   return (
@@ -61,40 +71,37 @@ export default function LeadMagnet() {
             <input
               type="email"
               value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setStatus("idle");
-              }}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="deine@email.de"
+              disabled={loading}
               className="flex-1 bg-transparent outline-none px-5 py-3 text-base"
               style={{ color: "var(--text)" }}
               aria-label="Email-Adresse"
             />
             <motion.button
               type="submit"
+              disabled={loading}
               whileTap={{ scale: 0.97 }}
-              className="px-5 md:px-6 py-3 rounded-full text-sm font-medium whitespace-nowrap"
+              className="px-5 md:px-6 py-3 rounded-full text-sm font-medium whitespace-nowrap disabled:opacity-60"
               style={{
                 background: "var(--wood)",
                 color: "var(--white)",
               }}
             >
-              <span className="hidden sm:inline">Floß-Analyse herunterladen </span>
-              <span className="sm:hidden">Herunterladen </span>→
+              <span className="hidden sm:inline">
+                {loading ? "Sende…" : "Floß-Analyse herunterladen "}
+              </span>
+              <span className="sm:hidden">
+                {loading ? "Sende…" : "Herunterladen "}
+              </span>
+              {!loading && "→"}
             </motion.button>
           </form>
         </FadeIn>
 
         <FadeIn delay={0.28}>
-          <p
-            className="mt-5 text-sm"
-            style={{ color: "var(--text-muted)" }}
-          >
-            {status === "sent"
-              ? "Danke — check dein Postfach in den nächsten Minuten."
-              : status === "error"
-              ? "Bitte gib eine gültige Email-Adresse ein."
-              : "Kein Spam. Kein Opt-in-Bullshit. Nur das PDF."}
+          <p className="mt-5 text-sm" style={{ color: "var(--text-muted)" }}>
+            Kein Spam. Kein Opt-in-Bullshit. Nur das PDF.
           </p>
         </FadeIn>
       </div>

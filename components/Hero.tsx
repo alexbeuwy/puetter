@@ -3,6 +3,9 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
+import useMeasure from "react-use-measure";
+import HeroHeadline from "./HeroHeadline";
+import VoiceNote from "./VoiceNote";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const spring = { type: "spring", stiffness: 100, damping: 20 } as const;
@@ -19,14 +22,16 @@ export default function Hero() {
     stiffness: 120,
     damping: 18,
   });
-  const imgWrap = useRef<HTMLDivElement>(null);
+
+  // react-use-measure — pixel-perfect bounds that update on resize/zoom
+  const [measureRef, bounds] = useMeasure({ scroll: false });
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = imgWrap.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    mx.set(e.clientX - rect.left - rect.width / 2);
-    my.set(e.clientY - rect.top - rect.height / 2);
+    if (!bounds.width) return;
+    const x = e.clientX - bounds.left;
+    const y = e.clientY - bounds.top;
+    mx.set(x - bounds.width / 2);
+    my.set(y - bounds.height / 2);
   };
   const onLeave = () => {
     mx.set(0);
@@ -81,42 +86,8 @@ export default function Hero() {
             Für Selbstständige & Unternehmer
           </motion.span>
 
-          <h1 className="h1 font-serif text-left max-w-[14ch]">
-            <motion.span
-              initial={{ y: 60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.9, ease, delay: 0.05 }}
-              className="block font-serif-italic"
-            >
-              Du hast genug
-            </motion.span>
-            <motion.span
-              initial={{ y: 60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.9, ease, delay: 0.12 }}
-              className="block font-serif-italic"
-            >
-              Bretter.
-            </motion.span>
-            <motion.span
-              initial={{ y: 60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.9, ease, delay: 0.22 }}
-              className="block font-normal"
-              style={{ color: "var(--wood)" }}
-            >
-              Zeit, ein Floß
-            </motion.span>
-            <motion.span
-              initial={{ y: 60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.9, ease, delay: 0.3 }}
-              className="block font-normal"
-              style={{ color: "var(--wood)" }}
-            >
-              draus zu bauen.
-            </motion.span>
-          </h1>
+          {/* GSAP + Splitting.js powered headline — isolated client component */}
+          <HeroHeadline />
 
           <motion.p
             initial={{ y: 30, opacity: 0 }}
@@ -164,11 +135,20 @@ export default function Hero() {
               </motion.span>
             </a>
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.9, delay: 0.9, ease }}
+            className="mt-8"
+          >
+            <VoiceNote label="30 Sek. von mir" />
+          </motion.div>
         </div>
 
         {/* Right: Image, offset down, with parallax tilt */}
         <motion.div
-          ref={imgWrap}
+          ref={measureRef}
           onMouseMove={onMove}
           onMouseLeave={onLeave}
           initial={{ y: 60, opacity: 0, scale: 0.94 }}
