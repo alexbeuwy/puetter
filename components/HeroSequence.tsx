@@ -25,46 +25,46 @@ type Chapter = {
 const CHAPTERS: Chapter[] = [
   {
     eyebrow: "Für Unternehmer & Geschäftsführer",
-    headline: "Du hast alles gebaut.",
-    accent: "Was davon trägt dich?",
-    sub: "Skills, Team, Pipeline, Referenzen. Die Bretter sind da. Und jeden Monat fängst du trotzdem gefühlt bei Null an. Das liegt nicht an dir — sondern am fehlenden System.",
+    headline: "Du hast alle Bretter.",
+    accent: "Nur noch kein Floß.",
+    sub: "Skills, Team, Pipeline, Referenzen — alles da. Aber jedes einzeln. Und aus einem Haufen Bretter wird nicht von allein ein Floß, das dich trägt, wenn's drauf ankommt.",
     facts: [
-      { Icon: BoardsIcon, label: "Skills & Erfahrung" },
-      { Icon: FragmentIcon, label: "Kein roter Faden" },
-      { Icon: WaveIcon, label: "Jeden Monat neu" },
+      { Icon: BoardsIcon, label: "Skills & Team da" },
+      { Icon: FragmentIcon, label: "Nichts greift ineinander" },
+      { Icon: WaveIcon, label: "Jeden Monat von vorn" },
     ],
   },
   {
-    eyebrow: "Viel Bewegung",
-    headline: "Du schwimmst.",
-    accent: "Aber treibst du oder steuerst du?",
-    sub: "Posten, networken, pitchen, hoffen. Bewegung hast du mehr als genug. Nur ist Bewegung noch lange keine Richtung.",
+    eyebrow: "Im Wasser, aber",
+    headline: "Dein Floß schwimmt.",
+    accent: "Nur wohin?",
+    sub: "Du networkst, postest, pitchst. Es bewegt sich. Immerhin. Nur ohne Ruder entscheidet der Wind, wo du landest — und der Wind ist ein mieser Navigator.",
     facts: [
-      { Icon: SwimmerIcon, label: "Viel Aktivität" },
-      { Icon: CompassFadeIcon, label: "Keine klare Richtung" },
-      { Icon: HourglassIcon, label: "Energie verpufft" },
+      { Icon: SwimmerIcon, label: "Viel Bewegung" },
+      { Icon: CompassFadeIcon, label: "Kein Kurs" },
+      { Icon: HourglassIcon, label: "Der Wind entscheidet" },
     ],
   },
   {
     eyebrow: "Richtung vor Tempo",
     headline: "Zuerst das Ruder.",
     accent: "Dann der Motor.",
-    sub: "Positionierung ist nicht was du machst. Positionierung ist wohin du gehst — und für wen du unersetzbar wirst.",
+    sub: "Positionierung ist kein Marketing-Trick. Positionierung ist die Entscheidung, wohin du willst — und für wen du unterwegs die erste Adresse bist.",
     facts: [
-      { Icon: CompassIcon, label: "Klare Position" },
-      { Icon: TargetIcon, label: "Eine Zielgruppe" },
-      { Icon: AnchorIcon, label: "Stabiler Kurs" },
+      { Icon: CompassIcon, label: "Klarer Kurs" },
+      { Icon: TargetIcon, label: "Ein Idealkunde" },
+      { Icon: AnchorIcon, label: "Unersetzbar" },
     ],
   },
   {
-    eyebrow: "Das Ergebnis",
-    headline: "Nicht mehr hoffen.",
-    accent: "Planbar gewinnen.",
-    sub: "Wenn Ruder und Fundament stehen, macht Tempo Sinn. Aus der Arbeit wird ein System. Aus dem Floß die Yacht.",
+    eyebrow: "Volle Fahrt",
+    headline: "Jetzt kommt der Motor.",
+    accent: "Und aus dem Floß die Yacht.",
+    sub: "Mit Ruder in der Hand und Fundament unter den Füßen macht Tempo plötzlich Sinn. Planbare Akquise, konstanter Kurs, ein System, das arbeitet — auch wenn du nicht mehr musst.",
     facts: [
-      { Icon: BoltIcon, label: "Planbare Akquise" },
-      { Icon: ArrowIcon, label: "Konstantes Tempo" },
-      { Icon: CheckIcon, label: "Wiederholbar" },
+      { Icon: BoltIcon, label: "Planbar statt Hoffnung" },
+      { Icon: ArrowIcon, label: "Konstanter Kurs" },
+      { Icon: CheckIcon, label: "System, das trägt" },
     ],
   },
 ];
@@ -135,10 +135,12 @@ export default function HeroSequence() {
     }
   }, [minTimePassed, loaded]);
 
-  // Draw the current frame. Hybrid scale on mobile — blend between
-  // contain and cover so the scene fills the media zone nicely
-  // without cropping the motor/ruder off the edges. Desktop stays
-  // on full cover for the cinematic full-bleed.
+  // Draw the current frame with plain object-fit: cover. On mobile
+  // the media zone is aspect-[16/9] which matches the source video
+  // aspect (1928 × 1076 ≈ 1.79), so cover ≈ contain in practice and
+  // there's no visible crop. On desktop cover fills the full-screen
+  // sticky. The canvas always paints edge-to-edge so the gradients
+  // on top can fade smoothly into the wood content zone.
   const drawCurrent = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -158,18 +160,7 @@ export default function HeroSequence() {
     const iw = img.naturalWidth;
     const ih = img.naturalHeight;
 
-    const isNarrow = cw < 768;
-    let scale: number;
-    if (isNarrow) {
-      // Blend 15 % toward cover from contain — image fills width
-      // but only a sliver is clipped top/bottom, so the main
-      // subject stays visible.
-      const containS = Math.min(cw / iw, ch / ih);
-      const coverS = Math.max(cw / iw, ch / ih);
-      scale = containS + (coverS - containS) * 0.15;
-    } else {
-      scale = Math.max(cw / iw, ch / ih);
-    }
+    const scale = Math.max(cw / iw, ch / ih);
     const sw = iw * scale;
     const sh = ih * scale;
     const sx = (cw - sw) / 2;
@@ -323,10 +314,12 @@ export default function HeroSequence() {
         style={{ background: "var(--wood)" }}
       >
         {/* ═══════════════  MEDIA ZONE  ═══════════════
-            Mobile: flex child, 44vh tall — compact but tall enough
-            to give the scene presence. Canvas fills it via a hybrid
-            scale (see drawCurrent). Desktop: absolute fill. */}
-        <div className="relative w-full h-[44vh] flex-shrink-0 md:h-full md:flex-none md:absolute md:inset-0">
+            Mobile: flex child with aspect-[16/9] — matches the source
+            video aspect exactly (1928×1076 ≈ 1.79), so cover fill
+            means zero crop and the gradient fades smoothly straight
+            into the content-zone wood with no visible edge.
+            Desktop: absolute fill of the sticky. */}
+        <div className="relative w-full aspect-[16/9] flex-shrink-0 md:aspect-auto md:h-full md:flex-none md:absolute md:inset-0">
           {/* Static first frame — shows instantly before canvas takes over */}
           <div className="absolute inset-0">
             <Image
