@@ -1,8 +1,10 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useScrollProgress } from "@/hooks/useScrollProgress";
+import HeroLoader from "./HeroLoader";
 import VoiceNote from "./VoiceNote";
 
 /* ─────────────────────────  CONSTANTS  ───────────────────────── */
@@ -116,10 +118,29 @@ export default function HeroSequence() {
     dpr: 1,
   });
   const [loaded, setLoaded] = useState(0);
+  const [minTimePassed, setMinTimePassed] = useState(false);
+  const [loaderDone, setLoaderDone] = useState(false);
 
   const progress = useScrollProgress(containerRef);
 
-  // Draw the current frame to canvas using object-fit: cover math
+  // Loader hand-off: show for at least 1.4 s AND until ~15 % of
+  // frames are in. Then AnimatePresence plays the gate exit.
+  useEffect(() => {
+    const t = setTimeout(() => setMinTimePassed(true), 1400);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (minTimePassed && loaded >= Math.min(40, TOTAL_FRAMES)) {
+      setLoaderDone(true);
+    }
+  }, [minTimePassed, loaded]);
+
+  // Draw the current frame to canvas.
+  // Mobile: object-fit CONTAIN → the full 16:9 scene is always
+  // visible, letterboxed by the wood background. No more cropping
+  // the motor/ruder out of frame.
+  // Desktop: object-fit COVER → full-bleed cinematic hero.
   const drawCurrent = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -138,11 +159,15 @@ export default function HeroSequence() {
     const ch = canvas.height / dpr;
     const iw = img.naturalWidth;
     const ih = img.naturalHeight;
-    const scale = Math.max(cw / iw, ch / ih);
+
+    const isNarrow = cw < 768;
+    const scale = isNarrow
+      ? Math.min(cw / iw, ch / ih) // contain → no crop
+      : Math.max(cw / iw, ch / ih); // cover → full bleed
     const sw = iw * scale;
     const sh = ih * scale;
     const sx = (cw - sw) / 2;
-    const sy = (ch - sh) / 2;
+    const sy = isNarrow ? (ch - sh) * 0.4 : (ch - sh) / 2; // slight upward bias on mobile
 
     ctx.clearRect(0, 0, cw, ch);
     ctx.drawImage(img, sx, sy, sw, sh);
@@ -280,25 +305,31 @@ export default function HeroSequence() {
       className="relative"
       style={{ height: "500vh", background: "var(--wood)" }}
     >
+      {/* Opening gate animation — mounts first, slides out when ready */}
+      <AnimatePresence>
+        {!loaderDone && (
+          <HeroLoader key="hero-loader" loaded={loaded} total={TOTAL_FRAMES} />
+        )}
+      </AnimatePresence>
+
       <div
         className="sticky top-0 w-screen h-[100dvh] overflow-hidden flex flex-col md:block"
         style={{ background: "var(--wood)" }}
       >
         {/* ═══════════════  MEDIA ZONE  ═══════════════
-            Mobile: flex child, 62vh tall at the top.
-            Desktop: absolute fill. The canvas is sized to its parent
-            via resize() → on mobile the raft doesn't get clipped to a
-            narrow slice anymore. */}
-        <div className="relative w-full h-[62vh] flex-shrink-0 md:h-full md:flex-none md:absolute md:inset-0">
+            Mobile: flex child, 56vh tall at the top. Canvas uses
+            object-fit CONTAIN on mobile so the motor/ruder never
+            crop out of frame. Desktop: absolute fill with COVER. */}
+        <div className="relative w-full h-[56vh] flex-shrink-0 md:h-full md:flex-none md:absolute md:inset-0">
           {/* Static first frame — shows instantly before canvas takes over */}
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 flex items-center justify-center">
             <Image
               src="/raft/seq/01/frame-001.jpg"
               alt=""
               fill
               priority
               sizes="100vw"
-              style={{ objectFit: "cover" }}
+              className="object-contain md:object-cover"
             />
           </div>
 
@@ -466,10 +497,18 @@ export default function HeroSequence() {
                 textShadow: "0 30px 80px rgba(0,0,0,0.45)",
               }}
             >
-              <span className="block">{active.headline}</span>
+              <SplitLine
+                text={active.headline}
+                resetKey={`h-${idx}`}
+                delayStart={0.05}
+              />
               {active.accent && (
                 <span className="block font-serif-italic">
-                  {active.accent}
+                  <SplitLine
+                    text={active.accent}
+                    resetKey={`a-${idx}`}
+                    delayStart={0.28}
+                  />
                 </span>
               )}
             </h1>
@@ -498,17 +537,47 @@ export default function HeroSequence() {
                 pointerEvents: ctaO > 0.3 ? "auto" : "none",
               }}
             >
-              <a
+              <motion.a
                 href="#kontakt"
-                className="inline-flex items-center gap-2 rounded-full px-5 md:px-7 py-3 md:py-3.5 text-sm font-medium"
+                whileHover={{ y: -2, scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                className="relative inline-flex items-center gap-2 rounded-full px-5 md:px-7 py-3 md:py-3.5 text-sm font-medium overflow-hidden"
                 style={{
                   background: "var(--cream)",
                   color: "var(--wood)",
                   boxShadow: "0 20px 50px -20px rgba(0,0,0,0.5)",
                 }}
               >
-                Gespräch anfragen →
-              </a>
+                <span className="relative z-10">Gespräch anfragen</span>
+                <motion.span
+                  className="relative z-10"
+                  animate={{ x: [0, 3, 0] }}
+                  transition={{
+                    duration: 1.8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  →
+                </motion.span>
+                {/* Shimmer sweep */}
+                <motion.span
+                  aria-hidden
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background:
+                      "linear-gradient(100deg, transparent 40%, rgba(255,255,255,0.55) 50%, transparent 60%)",
+                  }}
+                  animate={{ x: ["-120%", "120%"] }}
+                  transition={{
+                    duration: 2.8,
+                    repeat: Infinity,
+                    repeatDelay: 1.8,
+                    ease: "easeInOut",
+                  }}
+                />
+              </motion.a>
               <a
                 href="#story"
                 className="hidden sm:inline-flex items-center gap-2 rounded-full px-5 md:px-6 py-3 md:py-3.5 text-sm font-medium"
@@ -538,14 +607,23 @@ export default function HeroSequence() {
             ].map((row, i) => {
               const F = row.fact;
               return (
-                <div
+                <motion.div
                   key={`${idx}-${i}`}
+                  initial={{ scale: 0.85, opacity: 0, y: 20 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 220,
+                    damping: 18,
+                    delay: 0.35 + i * 0.07,
+                  }}
                   className="flex-shrink-0 md:flex-shrink flex items-center gap-2 md:gap-4 px-3 md:px-5 py-2.5 md:py-4 rounded-full md:rounded-2xl backdrop-blur-md"
                   style={{
                     background: "rgba(245,237,216,0.12)",
                     border: "1px solid rgba(245,237,216,0.22)",
                     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15)",
-                    opacity: row.O,
+                    // fade-out on chapter exit multiplies with the mount opacity
+                    filter: `opacity(${row.O})`,
                     transform: `translateY(${row.Y}px)`,
                     willChange: "opacity, transform",
                   }}
@@ -565,7 +643,7 @@ export default function HeroSequence() {
                   >
                     {F.label}
                   </span>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -613,6 +691,41 @@ export default function HeroSequence() {
         </div>
       </div>
     </section>
+  );
+}
+
+/* ─────────────────────────  SPLIT LINE  ───────────────────────── */
+
+/**
+ * Char-by-char reveal for a line of text. Re-triggers on resetKey
+ * change (e.g. chapter swap) by forcing a remount via the key prop.
+ * Uses the CSS keyframe `char-rise` defined in globals.css.
+ */
+function SplitLine({
+  text,
+  resetKey,
+  delayStart = 0,
+}: {
+  text: string;
+  resetKey: string;
+  delayStart?: number;
+}) {
+  const chars = Array.from(text);
+  return (
+    <span className="block" key={resetKey}>
+      {chars.map((ch, i) => (
+        <span
+          key={i}
+          className="char-reveal"
+          style={{
+            animationDelay: `${delayStart + i * 0.024}s`,
+            whiteSpace: "pre",
+          }}
+        >
+          {ch === " " ? "\u00A0" : ch}
+        </span>
+      ))}
+    </span>
   );
 }
 
