@@ -22,43 +22,43 @@ type Chapter = {
 
 const CHAPTERS: Chapter[] = [
   {
-    eyebrow: "Bretter",
-    headline: "Du hast genug",
-    accent: "Bretter.",
-    sub: "Skills, Erfahrung, Netzwerk — alles da. Was fehlt, ist die Reihenfolge.",
+    eyebrow: "Für Unternehmer & Geschäftsführer",
+    headline: "Du hast alles gebaut.",
+    accent: "Was davon trägt dich?",
+    sub: "Skills, Team, Pipeline, Referenzen. Die Bretter sind da. Und jeden Monat fängst du trotzdem gefühlt bei Null an. Das liegt nicht an dir — sondern am fehlenden System.",
     facts: [
-      { Icon: BoardsIcon, label: "Material vorhanden" },
+      { Icon: BoardsIcon, label: "Skills & Erfahrung" },
       { Icon: FragmentIcon, label: "Kein roter Faden" },
-      { Icon: WaveIcon, label: "Kein System" },
+      { Icon: WaveIcon, label: "Jeden Monat neu" },
     ],
   },
   {
-    eyebrow: "Floß",
-    headline: "Schwimmen ist nicht",
-    accent: "steuern.",
-    sub: "Du networkst. Du postest. Du hoffst. Bewegung ist noch keine Richtung.",
+    eyebrow: "Viel Bewegung",
+    headline: "Du schwimmst.",
+    accent: "Aber treibst du oder steuerst du?",
+    sub: "Posten, networken, pitchen, hoffen. Bewegung hast du mehr als genug. Nur ist Bewegung noch lange keine Richtung.",
     facts: [
       { Icon: SwimmerIcon, label: "Viel Aktivität" },
-      { Icon: CompassFadeIcon, label: "Keine Richtung" },
-      { Icon: HourglassIcon, label: "Energie verloren" },
+      { Icon: CompassFadeIcon, label: "Keine klare Richtung" },
+      { Icon: HourglassIcon, label: "Energie verpufft" },
     ],
   },
   {
-    eyebrow: "Ruder",
-    headline: "Zuerst die",
-    accent: "Richtung.",
-    sub: "Positionierung ist nicht was du machst — sondern wohin du gehst und für wen.",
+    eyebrow: "Richtung vor Tempo",
+    headline: "Zuerst das Ruder.",
+    accent: "Dann der Motor.",
+    sub: "Positionierung ist nicht was du machst. Positionierung ist wohin du gehst — und für wen du unersetzbar wirst.",
     facts: [
       { Icon: CompassIcon, label: "Klare Position" },
       { Icon: TargetIcon, label: "Eine Zielgruppe" },
-      { Icon: AnchorIcon, label: "Stabiler Stand" },
+      { Icon: AnchorIcon, label: "Stabiler Kurs" },
     ],
   },
   {
-    eyebrow: "Yacht",
-    headline: "Zeit, ein Floß draus zu",
-    accent: "bauen.",
-    sub: "Wenn Ruder und Fundament stehen, wird aus dem Floß die Yacht.",
+    eyebrow: "Das Ergebnis",
+    headline: "Nicht mehr hoffen.",
+    accent: "Planbar gewinnen.",
+    sub: "Wenn Ruder und Fundament stehen, macht Tempo Sinn. Aus der Arbeit wird ein System. Aus dem Floß die Yacht.",
     facts: [
       { Icon: BoltIcon, label: "Planbare Akquise" },
       { Icon: ArrowIcon, label: "Konstantes Tempo" },
@@ -182,10 +182,15 @@ export default function HeroSequence() {
         : FRAME_URLS_LG;
 
     const resize = () => {
+      // Use the canvas's parent as the size source — on mobile the
+      // media zone is only 62vh (not the full viewport).
+      const parent = canvas.parentElement;
+      if (!parent) return;
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       stateRef.current.dpr = dpr;
-      const w = window.innerWidth;
-      const h = window.innerHeight;
+      const w = parent.clientWidth;
+      const h = parent.clientHeight;
+      if (w === 0 || h === 0) return;
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       canvas.style.width = w + "px";
@@ -244,23 +249,29 @@ export default function HeroSequence() {
   const sub = clamp01(stepFloat - idx);
   const active = CHAPTERS[idx];
 
-  // CTA reveal in last 18% of overall progress
+  // CTA reveal in last 20% of overall progress
   const ctaO = easeOut(smooth(progress, 0.78, 0.95));
-  const ctaY = (1 - easeOut(smooth(progress, 0.78, 0.95))) * 28;
+  const ctaY = (1 - easeOut(smooth(progress, 0.78, 0.95))) * 22;
 
-  // Element choreography windows (per chapter sub-progress)
-  const eyebrowO = fadeWin(sub, 0.02, 0.18);
-  const eyebrowY = flyY(sub, 0.02, 0.18, 14);
-  const headO = fadeWin(sub, 0.06, 0.32);
-  const headY = flyY(sub, 0.06, 0.32, 60);
-  const subO = fadeWin(sub, 0.2, 0.44);
-  const subY = flyY(sub, 0.2, 0.44, 32);
-  const f1O = fadeWin(sub, 0.32, 0.5);
-  const f1Y = flyY(sub, 0.32, 0.5, 24);
-  const f2O = fadeWin(sub, 0.38, 0.56);
-  const f2Y = flyY(sub, 0.38, 0.56, 24);
-  const f3O = fadeWin(sub, 0.44, 0.62);
-  const f3Y = flyY(sub, 0.44, 0.62, 24);
+  // Choreography: content is ALWAYS fully visible at chapter start
+  // (sub=0). Only fades out + flies up during the chapter handover
+  // (sub 0.84 → 0.99). That way the hero is legible from page load.
+  const staticO = (oS: number, oE: number) => 1 - smooth(sub, oS, oE);
+  const staticY = (oS: number, oE: number, max: number) =>
+    -easeOut(smooth(sub, oS, oE)) * max;
+
+  const eyebrowO = staticO(0.82, 0.92);
+  const eyebrowY = staticY(0.82, 0.92, 14);
+  const headO = staticO(0.85, 0.96);
+  const headY = staticY(0.85, 0.96, 30);
+  const subO = staticO(0.87, 0.98);
+  const subY = staticY(0.87, 0.98, 22);
+  const f1O = staticO(0.83, 0.93);
+  const f1Y = staticY(0.83, 0.93, 16);
+  const f2O = staticO(0.85, 0.95);
+  const f2Y = staticY(0.85, 0.95, 16);
+  const f3O = staticO(0.87, 0.97);
+  const f3Y = staticY(0.87, 0.97, 16);
 
   return (
     <section
@@ -270,125 +281,150 @@ export default function HeroSequence() {
       style={{ height: "500vh", background: "var(--wood)" }}
     >
       <div
-        className="sticky top-0 w-screen h-[100dvh] overflow-hidden"
+        className="sticky top-0 w-screen h-[100dvh] overflow-hidden flex flex-col md:block"
         style={{ background: "var(--wood)" }}
       >
-        {/* Static first frame — shows instantly before canvas takes over */}
-        <div className="absolute inset-0">
-          <Image
-            src="/raft/seq/01/frame-001.jpg"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            style={{ objectFit: "cover" }}
-          />
-        </div>
-
-        {/* Canvas overlay — draws current frame */}
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0"
-          style={{ width: "100%", height: "100%" }}
-        />
-
-        {/* Legibility gradients */}
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(44,32,21,0.55) 0%, rgba(44,32,21,0.05) 18%, rgba(44,32,21,0.05) 42%, rgba(44,32,21,0.82) 100%)",
-          }}
-        />
-        <div
-          aria-hidden
-          className="absolute inset-y-0 left-0 w-1/2 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(44,32,21,0.42) 0%, rgba(44,32,21,0) 100%)",
-          }}
-        />
-
-        {/* Top bar: eyebrow + progress + counter */}
-        <div className="absolute top-0 left-0 right-0 px-5 md:px-14 pt-24 md:pt-28 flex items-center gap-3 md:gap-6 z-30">
-          <span
-            className="hidden sm:inline text-[11px] tracking-[0.22em] uppercase flex-shrink-0"
-            style={{ color: "rgba(245,237,216,0.75)" }}
-          >
-            Für Selbstständige & Unternehmer
-          </span>
-          <div
-            className="relative h-[2px] flex-1 overflow-hidden rounded-full"
-            style={{ background: "rgba(245,237,216,0.18)" }}
-          >
-            <div
-              className="absolute left-0 top-0 h-full"
-              style={{
-                background: "var(--cream)",
-                width: `${progress * 100}%`,
-                transition: "width 80ms linear",
-              }}
+        {/* ═══════════════  MEDIA ZONE  ═══════════════
+            Mobile: flex child, 62vh tall at the top.
+            Desktop: absolute fill. The canvas is sized to its parent
+            via resize() → on mobile the raft doesn't get clipped to a
+            narrow slice anymore. */}
+        <div className="relative w-full h-[62vh] flex-shrink-0 md:h-full md:flex-none md:absolute md:inset-0">
+          {/* Static first frame — shows instantly before canvas takes over */}
+          <div className="absolute inset-0">
+            <Image
+              src="/raft/seq/01/frame-001.jpg"
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              style={{ objectFit: "cover" }}
             />
           </div>
-          <span
-            className="font-mono text-[11px] tracking-[0.15em] flex-shrink-0"
-            style={{ color: "var(--cream)" }}
-          >
-            0{idx + 1} / 0{CHAPTER_COUNT}
-          </span>
-        </div>
 
-        {/* Left vertical chapter rail — hidden on small screens */}
-        <div className="hidden md:flex absolute left-14 top-1/2 -translate-y-1/2 flex-col gap-5 z-30">
-          {CHAPTERS.map((c, i) => {
-            const isActive = i === idx;
-            return (
-              <div key={c.eyebrow} className="flex items-center gap-4">
-                <span className="relative w-9 h-9 flex items-center justify-center flex-shrink-0">
+          {/* Canvas overlay — draws current frame */}
+          <canvas
+            ref={canvasRef}
+            className="absolute inset-0"
+            style={{ width: "100%", height: "100%" }}
+          />
+
+          {/* Legibility gradients — desktop needs more darkening, mobile just a
+              tiny bottom fade into the wood content zone */}
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(44,32,21,0.55) 0%, rgba(44,32,21,0.05) 22%, rgba(44,32,21,0.05) 60%, rgba(44,32,21,0.85) 100%)",
+            }}
+          />
+          <div
+            aria-hidden
+            className="hidden md:block absolute inset-y-0 left-0 w-1/2 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(44,32,21,0.42) 0%, rgba(44,32,21,0) 100%)",
+            }}
+          />
+
+          {/* Top bar: eyebrow + progress + counter */}
+          <div className="absolute top-0 left-0 right-0 px-5 md:px-14 pt-24 md:pt-28 flex items-center gap-3 md:gap-6 z-30">
+            <span
+              className="hidden sm:inline text-[11px] tracking-[0.22em] uppercase flex-shrink-0"
+              style={{ color: "rgba(245,237,216,0.75)" }}
+            >
+              Für Unternehmer & Geschäftsführer
+            </span>
+            <div
+              className="relative h-[2px] flex-1 overflow-hidden rounded-full"
+              style={{ background: "rgba(245,237,216,0.18)" }}
+            >
+              <div
+                className="absolute left-0 top-0 h-full"
+                style={{
+                  background: "var(--cream)",
+                  width: `${progress * 100}%`,
+                  transition: "width 80ms linear",
+                }}
+              />
+            </div>
+            <span
+              className="font-mono text-[11px] tracking-[0.15em] flex-shrink-0"
+              style={{ color: "var(--cream)" }}
+            >
+              0{idx + 1} / 0{CHAPTER_COUNT}
+            </span>
+          </div>
+
+          {/* Left vertical chapter rail — desktop only */}
+          <div className="hidden md:flex absolute left-14 top-1/2 -translate-y-1/2 flex-col gap-5 z-30">
+            {CHAPTERS.map((c, i) => {
+              const isActive = i === idx;
+              return (
+                <div key={c.eyebrow} className="flex items-center gap-4">
+                  <span className="relative w-9 h-9 flex items-center justify-center flex-shrink-0">
+                    <span
+                      className="absolute inset-0 rounded-full backdrop-blur-md"
+                      style={{
+                        background: isActive
+                          ? "var(--cream)"
+                          : "rgba(44,32,21,0.45)",
+                        border: `1px solid ${
+                          isActive ? "var(--cream)" : "rgba(245,237,216,0.35)"
+                        }`,
+                        transition: "all 500ms cubic-bezier(0.16, 1, 0.3, 1)",
+                      }}
+                    />
+                    <span
+                      className="relative font-mono text-[11px]"
+                      style={{
+                        color: isActive
+                          ? "var(--wood)"
+                          : "rgba(245,237,216,0.85)",
+                        transition: "color 400ms ease",
+                      }}
+                    >
+                      0{i + 1}
+                    </span>
+                  </span>
                   <span
-                    className="absolute inset-0 rounded-full backdrop-blur-md"
-                    style={{
-                      background: isActive
-                        ? "var(--cream)"
-                        : "rgba(44,32,21,0.45)",
-                      border: `1px solid ${
-                        isActive ? "var(--cream)" : "rgba(245,237,216,0.35)"
-                      }`,
-                      transition: "all 500ms cubic-bezier(0.16, 1, 0.3, 1)",
-                    }}
-                  />
-                  <span
-                    className="relative font-mono text-[11px]"
+                    className="hidden xl:inline font-serif-italic text-sm"
                     style={{
                       color: isActive
-                        ? "var(--wood)"
-                        : "rgba(245,237,216,0.85)",
+                        ? "var(--cream)"
+                        : "rgba(245,237,216,0.4)",
                       transition: "color 400ms ease",
                     }}
                   >
-                    0{i + 1}
+                    {c.eyebrow}
                   </span>
-                </span>
-                <span
-                  className="hidden xl:inline font-serif-italic text-sm"
-                  style={{
-                    color: isActive
-                      ? "var(--cream)"
-                      : "rgba(245,237,216,0.4)",
-                    transition: "color 400ms ease",
-                  }}
-                >
-                  {c.eyebrow}
-                </span>
-              </div>
-            );
-          })}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Loading indicator — inside media zone top-right */}
+          {loaded < TOTAL_FRAMES && (
+            <div
+              className="absolute top-24 md:top-28 right-5 md:right-14 z-40 text-[10px] font-mono tracking-widest"
+              style={{
+                color: "rgba(245,237,216,0.5)",
+                opacity: loaded / TOTAL_FRAMES < 0.9 ? 1 : 0,
+                transition: "opacity 400ms ease",
+              }}
+            >
+              {String(Math.round((loaded / TOTAL_FRAMES) * 100)).padStart(3, "0")}
+              %
+            </div>
+          )}
         </div>
 
-        {/* Chapter content — bottom area */}
+        {/* ═══════════════  CONTENT ZONE  ═══════════════
+            Mobile: takes the remaining 38vh below the media, wood bg,
+            cream text. Desktop: absolute overlay on the canvas. */}
         <div
-          className="absolute inset-0 z-20 grid grid-cols-12 gap-4 md:gap-6 px-5 md:px-14 pb-20 md:pb-24 pt-36 md:pt-44 pointer-events-none"
+          className="relative flex-1 min-h-0 z-20 md:absolute md:inset-0 md:flex-none grid grid-cols-12 gap-3 md:gap-6 px-5 md:px-14 pt-5 md:pt-44 pb-16 md:pb-24 pointer-events-none"
           style={{ alignContent: "end" }}
         >
           {/* Left: eyebrow + headline + sub */}
@@ -491,9 +527,10 @@ export default function HeroSequence() {
             </div>
           </div>
 
-          {/* Right: 3 fact pills. Stacked on desktop (right column),
-              horizontal row on mobile (below the copy). */}
-          <div className="col-span-12 md:col-span-3 md:col-start-10 flex md:flex-col justify-start md:justify-end gap-2 md:gap-3 mt-4 md:mt-0 overflow-x-auto md:overflow-visible no-scrollbar">
+          {/* Right: 3 fact pills. Desktop only — on mobile the
+              content zone is only ~38vh tall and the pills would push
+              the copy off-screen. */}
+          <div className="hidden md:flex col-span-3 col-start-10 flex-col justify-end gap-3">
             {[
               { fact: active.facts[0], O: f1O, Y: f1Y },
               { fact: active.facts[1], O: f2O, Y: f2Y },
@@ -536,18 +573,18 @@ export default function HeroSequence() {
 
         {/* Persistent micro social-proof at absolute bottom */}
         <div
-          className="absolute bottom-6 left-0 right-0 flex justify-center z-30 pointer-events-none"
+          className="absolute bottom-4 md:bottom-6 left-0 right-0 flex justify-center z-30 pointer-events-none px-4"
           style={{ opacity: 1 - ctaO * 0.3 }}
         >
           <div
-            className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-5 py-2 rounded-full backdrop-blur-md"
+            className="flex flex-wrap items-center justify-center gap-x-2 md:gap-x-3 gap-y-1 px-4 md:px-5 py-2 rounded-full backdrop-blur-md"
             style={{
               background: "rgba(44,32,21,0.45)",
               border: "1px solid rgba(245,237,216,0.2)",
             }}
           >
             <span
-              className="text-[11px] tracking-[0.1em]"
+              className="text-[10px] md:text-[11px] tracking-[0.1em]"
               style={{ color: "var(--cream)" }}
             >
               Seit 2017
@@ -557,38 +594,23 @@ export default function HeroSequence() {
               style={{ background: "var(--rope)" }}
             />
             <span
-              className="text-[11px] tracking-[0.1em]"
+              className="text-[10px] md:text-[11px] tracking-[0.1em]"
               style={{ color: "var(--cream)" }}
             >
               Operator, nicht Berater
             </span>
             <span
-              className="w-0.5 h-0.5 rounded-full"
+              className="hidden sm:inline w-0.5 h-0.5 rounded-full"
               style={{ background: "var(--rope)" }}
             />
             <span
-              className="text-[11px] tracking-[0.1em]"
+              className="hidden sm:inline text-[10px] md:text-[11px] tracking-[0.1em]"
               style={{ color: "var(--cream)" }}
             >
               Nur auf Empfehlung
             </span>
           </div>
         </div>
-
-        {/* Loading indicator (top-right, fades out as frames arrive) */}
-        {loaded < TOTAL_FRAMES && (
-          <div
-            className="absolute top-24 right-14 z-40 text-[10px] font-mono tracking-widest"
-            style={{
-              color: "rgba(245,237,216,0.5)",
-              opacity: loaded / TOTAL_FRAMES < 0.9 ? 1 : 0,
-              transition: "opacity 400ms ease",
-            }}
-          >
-            {String(Math.round((loaded / TOTAL_FRAMES) * 100)).padStart(3, "0")}
-            %
-          </div>
-        )}
       </div>
     </section>
   );
