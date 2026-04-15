@@ -1,7 +1,6 @@
 import Nav from "@/components/Nav";
-import Hero from "@/components/Hero";
+import HeroSequence from "@/components/HeroSequence";
 import PainSection from "@/components/PainSection";
-import RaftScrollSequence from "@/components/RaftScrollSequence";
 import DreamState from "@/components/DreamState";
 import Mechanism from "@/components/Mechanism";
 import ProofStack from "@/components/ProofStack";
@@ -15,45 +14,36 @@ import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
 
 /**
- * Page order synthesized from:
- *  - Schwartz (Breakthrough Advertising) — lead with dominant emotion,
- *    defer authority until after proof so it reads editorial, not guru.
- *  - Brunson (Epiphany Bridge) — scrolltelling as the visualized "wall".
- *  - StoryBrand — mechanism as explicit Plan after the Dream pivot.
- *  - Hormozi ($100M Offers) — disqualifier BEFORE offer (reactance +
- *    commitment), scarcity immediately after offer.
- *  - DACH market reality — the brand must register as a quiet operator,
- *    not a stage-brand. Hence Authority as editorial late, not early.
+ * Page order (post-research synthesis):
+ *  01 HeroSequence       — scroll-pinned frame-by-frame canvas sequence
+ *                          (replaces old Hero + RaftScrollSequence)
+ *  02 PainSection        — agitate
+ *  03 DreamState         — emotional pivot
+ *  04 Mechanism          — StoryBrand plan
+ *  05 ProofStack         — Hormozi value anchor
+ *  06 OriginStory        — Schwartz editorial authority (late, not guru)
+ *  07 Disqualifier       — Hormozi reactance BEFORE offer
+ *  08 Offer              — presented to a pre-qualified reader
+ *  09 ScarcityBar        — DACH: framed as craft, not countdown
+ *  10 LeadMagnet         — secondary path for not-yet-ready
+ *  11 FAQ                — objection handling before close
+ *  12 FinalCTA           — direct close
  */
 export default function Home() {
   return (
     <main className="relative">
       <Nav />
-      {/* 01 — Hook (Schwartz: dominant emotion first) */}
-      <Hero />
-      {/* 02 — Pain agitate */}
+      <HeroSequence />
       <PainSection />
-      {/* 03 — Pain visualized (Brunson: the wall) */}
-      <RaftScrollSequence />
-      {/* 04 — Dream state (emotional pivot) */}
       <DreamState />
-      {/* 05 — Mechanism (StoryBrand: the Plan) */}
       <Mechanism />
-      {/* 06 — Proof (Hormozi: anchor the value equation) */}
       <ProofStack />
-      {/* 07 — Authority / origin (Schwartz: editorial, not guru intro) */}
       <OriginStory />
-      {/* 08 — Disqualifier (Hormozi: reactance/commitment BEFORE offer) */}
       <Disqualifier />
-      {/* 09 — Offer (to a pre-qualified, pre-proven reader) */}
       <Offer />
-      {/* 10 — Selectivity bar (DACH: framing as craft, not scarcity theater) */}
       <ScarcityBar />
-      {/* 11 — Lead magnet (for the not-yet-ready) */}
       <LeadMagnet />
-      {/* 12 — Objection handling */}
       <FAQ />
-      {/* 13 — Final CTA */}
       <FinalCTA />
       <Footer />
     </main>
