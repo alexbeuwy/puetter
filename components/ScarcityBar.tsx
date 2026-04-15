@@ -4,13 +4,16 @@ import { motion } from "framer-motion";
 import { useMemo } from "react";
 import useMeasure from "react-use-measure";
 
+// DACH market reality: urgency theater ("2 seats left!") erodes trust
+// with successful entrepreneurs. Reframed as selectivity — the cap is
+// a statement about craft, not a countdown.
 const ITEMS = [
-  "Q2 2025",
-  "2 von 4 Plätzen frei",
+  "Arbeit auf Empfehlung, seit 2017",
   "Bewerbung statt Buchung",
-  "Erstgespräch kostenlos",
-  "Arbeit auf Empfehlung",
-  "Max. 4 Kunden pro Quartal",
+  "Maximal vier Kunden pro Quartal",
+  "Keine Cold Outreach. Keine Ads.",
+  "Nicht alles lässt sich skalieren",
+  "Handwerk vor Volumen",
 ];
 
 /**
@@ -28,7 +31,7 @@ export default function ScarcityBar() {
 
   return (
     <section
-      aria-label="Verfügbarkeit und Scarcity"
+      aria-label="Arbeitsweise und Selektivität"
       className="relative py-6 overflow-hidden"
       style={{
         background: "var(--wood)",

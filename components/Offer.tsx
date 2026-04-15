@@ -166,7 +166,7 @@ export default function Offer() {
                 className="text-[11px] tracking-widest uppercase"
                 style={{ color: "var(--text-muted)" }}
               >
-                Freie Plätze Q2
+                Bewerbung · nicht Buchung
               </span>
             </div>
 

@@ -19,7 +19,11 @@ const ITEMS = [
   },
   {
     q: "Warum ausgerechnet du?",
-    a: "Weil ich das, was ich zeige, selbst gebaut habe. Ohne Cold Outreach. Ohne Funnels, die Menschen manipulieren. Und weil ich regelmäßig Nein sage, wenn wir nicht zusammenpassen.",
+    a: "Weil ich das, was ich zeige, selbst gebaut habe — als Operator, nicht als Berater. Sieben Jahre solo, 300k aus einer Studentenwohnung, später eine Agentur bis 15 Leute und wieder zurück. Kein Funnel, kein Cold Outreach, kein Kurs-Portfolio. Und weil ich regelmäßig Nein sage, wenn wir nicht zusammenpassen.",
+  },
+  {
+    q: "Kommt da noch ein Kurs oder eine Gruppe?",
+    a: "Nein. Keine Kohorte, kein Mastermind, kein Membership. Der Grund ist einfach: Das, was hier funktioniert, funktioniert nicht in Gruppen. Wenn du den nächstgünstigeren Einstieg willst, gibt es in Deutschland genug gute Adressen. Hier ist nur 1:1.",
   },
 ];
 

@@ -108,11 +108,11 @@ export default function Hero() {
             className="mt-5 flex flex-wrap items-center gap-3"
             style={{ fontSize: 14, color: "var(--text-muted)" }}
           >
-            <span>Seit 2017</span>
+            <span>Seit 2017 · Operator, nicht Berater</span>
             <span className="w-1 h-1 rounded-full" style={{ background: "var(--rope)" }} />
-            <span>Nur auf Empfehlung gewachsen</span>
+            <span>Nur auf Empfehlung</span>
             <span className="w-1 h-1 rounded-full" style={{ background: "var(--rope)" }} />
-            <span>Keine Cold Outreach</span>
+            <span>Keine Cold Outreach, keine Ads</span>
           </motion.p>
 
           <motion.div
@@ -209,7 +209,7 @@ export default function Hero() {
                 style={{ background: "var(--water)" }}
               />
               <span className="text-xs font-medium" style={{ color: "var(--wood)" }}>
-                Plätze Q2 — 2 verfügbar
+                Arbeit auf Empfehlung, seit 2017
               </span>
             </motion.div>
           </motion.div>
