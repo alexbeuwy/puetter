@@ -123,24 +123,22 @@ export default function HeroSequence() {
 
   const progress = useScrollProgress(containerRef);
 
-  // Loader hand-off: show for at least 1.4 s AND until ~15 % of
-  // frames are in. Then AnimatePresence plays the gate exit.
+  // Loader hand-off: short minimum (700 ms) + wait for ~10 % frames
   useEffect(() => {
-    const t = setTimeout(() => setMinTimePassed(true), 1400);
+    const t = setTimeout(() => setMinTimePassed(true), 700);
     return () => clearTimeout(t);
   }, []);
 
   useEffect(() => {
-    if (minTimePassed && loaded >= Math.min(40, TOTAL_FRAMES)) {
+    if (minTimePassed && loaded >= Math.min(25, TOTAL_FRAMES)) {
       setLoaderDone(true);
     }
   }, [minTimePassed, loaded]);
 
-  // Draw the current frame to canvas.
-  // Mobile: object-fit CONTAIN → the full 16:9 scene is always
-  // visible, letterboxed by the wood background. No more cropping
-  // the motor/ruder out of frame.
-  // Desktop: object-fit COVER → full-bleed cinematic hero.
+  // Draw the current frame. Hybrid scale on mobile — blend between
+  // contain and cover so the scene fills the media zone nicely
+  // without cropping the motor/ruder off the edges. Desktop stays
+  // on full cover for the cinematic full-bleed.
   const drawCurrent = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -161,13 +159,21 @@ export default function HeroSequence() {
     const ih = img.naturalHeight;
 
     const isNarrow = cw < 768;
-    const scale = isNarrow
-      ? Math.min(cw / iw, ch / ih) // contain → no crop
-      : Math.max(cw / iw, ch / ih); // cover → full bleed
+    let scale: number;
+    if (isNarrow) {
+      // Blend 15 % toward cover from contain — image fills width
+      // but only a sliver is clipped top/bottom, so the main
+      // subject stays visible.
+      const containS = Math.min(cw / iw, ch / ih);
+      const coverS = Math.max(cw / iw, ch / ih);
+      scale = containS + (coverS - containS) * 0.15;
+    } else {
+      scale = Math.max(cw / iw, ch / ih);
+    }
     const sw = iw * scale;
     const sh = ih * scale;
     const sx = (cw - sw) / 2;
-    const sy = isNarrow ? (ch - sh) * 0.4 : (ch - sh) / 2; // slight upward bias on mobile
+    const sy = (ch - sh) / 2;
 
     ctx.clearRect(0, 0, cw, ch);
     ctx.drawImage(img, sx, sy, sw, sh);
@@ -317,19 +323,19 @@ export default function HeroSequence() {
         style={{ background: "var(--wood)" }}
       >
         {/* ═══════════════  MEDIA ZONE  ═══════════════
-            Mobile: flex child, 56vh tall at the top. Canvas uses
-            object-fit CONTAIN on mobile so the motor/ruder never
-            crop out of frame. Desktop: absolute fill with COVER. */}
-        <div className="relative w-full h-[56vh] flex-shrink-0 md:h-full md:flex-none md:absolute md:inset-0">
+            Mobile: flex child, 44vh tall — compact but tall enough
+            to give the scene presence. Canvas fills it via a hybrid
+            scale (see drawCurrent). Desktop: absolute fill. */}
+        <div className="relative w-full h-[44vh] flex-shrink-0 md:h-full md:flex-none md:absolute md:inset-0">
           {/* Static first frame — shows instantly before canvas takes over */}
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0">
             <Image
               src="/raft/seq/01/frame-001.jpg"
               alt=""
               fill
               priority
               sizes="100vw"
-              className="object-contain md:object-cover"
+              className="object-cover"
             />
           </div>
 
@@ -340,16 +346,28 @@ export default function HeroSequence() {
             style={{ width: "100%", height: "100%" }}
           />
 
-          {/* Legibility gradients — desktop needs more darkening, mobile just a
-              tiny bottom fade into the wood content zone */}
+          {/* Top darkening — masks the nav pill + top bar */}
           <div
             aria-hidden
-            className="absolute inset-0 pointer-events-none"
+            className="absolute top-0 left-0 right-0 h-[30%] pointer-events-none"
             style={{
               background:
-                "linear-gradient(180deg, rgba(44,32,21,0.55) 0%, rgba(44,32,21,0.05) 22%, rgba(44,32,21,0.05) 60%, rgba(44,32,21,0.85) 100%)",
+                "linear-gradient(180deg, rgba(44,32,21,0.75) 0%, rgba(44,32,21,0.25) 55%, rgba(44,32,21,0) 100%)",
             }}
           />
+
+          {/* Bottom fade → full wood — smooth hand-off into the content zone.
+              Starts transparent mid-media and ramps to full wood at the edge. */}
+          <div
+            aria-hidden
+            className="absolute bottom-0 left-0 right-0 h-[55%] pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(44,32,21,0) 0%, rgba(44,32,21,0.25) 40%, rgba(44,32,21,0.75) 75%, rgba(44,32,21,1) 100%)",
+            }}
+          />
+
+          {/* Desktop-only left fade for text legibility */}
           <div
             aria-hidden
             className="hidden md:block absolute inset-y-0 left-0 w-1/2 pointer-events-none"
@@ -452,10 +470,10 @@ export default function HeroSequence() {
         </div>
 
         {/* ═══════════════  CONTENT ZONE  ═══════════════
-            Mobile: takes the remaining 38vh below the media, wood bg,
+            Mobile: takes the remaining 56vh below the media, wood bg,
             cream text. Desktop: absolute overlay on the canvas. */}
         <div
-          className="relative flex-1 min-h-0 z-20 md:absolute md:inset-0 md:flex-none grid grid-cols-12 gap-3 md:gap-6 px-5 md:px-14 pt-5 md:pt-44 pb-16 md:pb-24 pointer-events-none"
+          className="relative flex-1 min-h-0 z-20 md:absolute md:inset-0 md:flex-none grid grid-cols-12 gap-3 md:gap-6 px-5 md:px-14 pt-8 md:pt-44 pb-16 md:pb-24 pointer-events-none"
           style={{ alignContent: "end" }}
         >
           {/* Left: eyebrow + headline + sub */}
@@ -698,8 +716,10 @@ export default function HeroSequence() {
 
 /**
  * Char-by-char reveal for a line of text. Re-triggers on resetKey
- * change (e.g. chapter swap) by forcing a remount via the key prop.
- * Uses the CSS keyframe `char-rise` defined in globals.css.
+ * change (e.g. chapter swap). Wraps each word in a non-breaking
+ * inline-block so the line can only break at word boundaries —
+ * otherwise the browser happily breaks a word mid-character because
+ * every char is its own inline-block span.
  */
 function SplitLine({
   text,
@@ -710,21 +730,35 @@ function SplitLine({
   resetKey: string;
   delayStart?: number;
 }) {
-  const chars = Array.from(text);
+  const words = text.split(" ");
+  let charIndex = 0;
   return (
     <span className="block" key={resetKey}>
-      {chars.map((ch, i) => (
-        <span
-          key={i}
-          className="char-reveal"
-          style={{
-            animationDelay: `${delayStart + i * 0.024}s`,
-            whiteSpace: "pre",
-          }}
-        >
-          {ch === " " ? "\u00A0" : ch}
-        </span>
-      ))}
+      {words.map((word, wi) => {
+        const chars = Array.from(word);
+        return (
+          <span
+            key={wi}
+            className="inline-block whitespace-nowrap"
+            style={{ marginRight: wi < words.length - 1 ? "0.24em" : 0 }}
+          >
+            {chars.map((ch, ci) => {
+              const idx = charIndex++;
+              return (
+                <span
+                  key={ci}
+                  className="char-reveal"
+                  style={{
+                    animationDelay: `${delayStart + idx * 0.024}s`,
+                  }}
+                >
+                  {ch}
+                </span>
+              );
+            })}
+          </span>
+        );
+      })}
     </span>
   );
 }

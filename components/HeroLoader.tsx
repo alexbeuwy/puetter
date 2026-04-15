@@ -36,7 +36,7 @@ export default function HeroLoader({ loaded, total }: Props) {
         }}
         initial={{ y: 0 }}
         exit={{ y: "-100%" }}
-        transition={{ duration: 1.2, ease: gateEase }}
+        transition={{ duration: 0.95, ease: gateEase }}
       />
 
       {/* Bottom half of the gate */}
@@ -49,7 +49,7 @@ export default function HeroLoader({ loaded, total }: Props) {
         }}
         initial={{ y: 0 }}
         exit={{ y: "100%" }}
-        transition={{ duration: 1.2, ease: gateEase }}
+        transition={{ duration: 0.95, ease: gateEase }}
       />
 
       {/* Logo + progress centered, exits before the gates open */}
