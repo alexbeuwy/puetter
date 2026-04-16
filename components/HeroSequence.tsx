@@ -463,14 +463,15 @@ export default function HeroSequence() {
         </div>
 
         {/* ═══════════════  CONTENT ZONE  ═══════════════
-            Mobile: takes the remaining 56vh below the media, wood bg,
-            cream text. Desktop: absolute overlay on the canvas. */}
+            Desktop: headline + sub at TOP ("im Himmel" — above the
+            water, in the sky part of the image). Facts stay at the
+            bottom near the water line via self-end.
+            Mobile: flows top-down below the media zone. */}
         <div
-          className="relative flex-1 min-h-0 z-20 md:absolute md:inset-0 md:flex-none grid grid-cols-12 gap-3 md:gap-6 px-5 md:px-14 pt-8 md:pt-44 pb-16 md:pb-24 pointer-events-none"
-          style={{ alignContent: "end" }}
+          className="relative flex-1 min-h-0 z-20 md:absolute md:inset-0 md:flex-none grid grid-cols-12 gap-3 md:gap-6 px-5 md:px-14 pt-8 md:pt-36 pb-16 md:pb-10 pointer-events-none"
         >
-          {/* Left: eyebrow + headline + sub */}
-          <div className="col-span-12 md:col-span-7 md:col-start-2 flex flex-col justify-end">
+          {/* Left: eyebrow + headline + sub — desktop: at the TOP (sky) */}
+          <div className="col-span-12 md:col-span-7 md:col-start-2 flex flex-col justify-start md:self-start">
             <div
               className="flex items-center gap-3 mb-4 md:mb-5"
               style={{
@@ -607,10 +608,10 @@ export default function HeroSequence() {
             </div>
           </div>
 
-          {/* Right: 3 fact pills. Desktop only — on mobile the
-              content zone is only ~38vh tall and the pills would push
-              the copy off-screen. */}
-          <div className="hidden md:flex col-span-3 col-start-10 flex-col justify-end gap-3">
+          {/* Right: 3 fact pills — desktop only, pinned to bottom
+              (self-end) so they sit at the water line while the
+              headline is in the sky. */}
+          <div className="hidden md:flex col-span-3 col-start-10 flex-col gap-3 md:self-end md:pb-8">
             {[
               { fact: active.facts[0], O: f1O, Y: f1Y },
               { fact: active.facts[1], O: f2O, Y: f2Y },
