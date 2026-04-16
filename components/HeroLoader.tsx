@@ -97,9 +97,9 @@ export default function HeroLoader({ loaded, total }: Props) {
         exit={{ opacity: 0, scale: 0.92, filter: "blur(12px)" }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        {/* Glassmorphism card */}
+        {/* Glassmorphism card with rotating gradient glow */}
         <motion.div
-          className="relative flex flex-col items-center gap-6 px-14 py-12 md:px-20 md:py-16 rounded-[32px]"
+          className="relative flex flex-col items-center gap-8 px-16 py-14 md:px-24 md:py-20 rounded-[36px] glow-border"
           style={{
             background: "rgba(255,255,255,0.08)",
             backdropFilter: "blur(24px) saturate(1.4)",
@@ -109,37 +109,38 @@ export default function HeroLoader({ loaded, total }: Props) {
               "inset 0 1px 0 rgba(255,255,255,0.25), 0 40px 80px -30px rgba(0,50,50,0.5)",
           }}
         >
-          {/* Logo mark */}
+          {/* Logo mark — large, truly centered */}
           <motion.div
-            animate={{ y: [0, -4, 0] }}
+            animate={{ y: [0, -6, 0] }}
             transition={{
               duration: 3,
               repeat: Infinity,
               ease: "easeInOut",
             }}
+            className="flex items-center justify-center"
             style={{ color: "var(--cream)" }}
           >
-            <LogoMark className="h-14 md:h-20 w-auto drop-shadow-lg" />
+            <LogoMark className="h-24 md:h-32 w-auto drop-shadow-lg" />
           </motion.div>
 
           {/* Reflected mark (mirrored, faded) */}
           <div
-            className="opacity-20"
+            className="opacity-15"
             style={{
-              transform: "scaleY(-1) translateY(8px)",
+              transform: "scaleY(-1) translateY(12px)",
               color: "var(--cream)",
-              filter: "blur(2px)",
+              filter: "blur(3px)",
               maskImage:
-                "linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 80%)",
+                "linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 70%)",
               WebkitMaskImage:
-                "linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 80%)",
+                "linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 70%)",
             }}
           >
-            <LogoMark className="h-14 md:h-20 w-auto" />
+            <LogoMark className="h-24 md:h-32 w-auto" />
           </div>
 
           {/* Progress */}
-          <div className="w-36 md:w-48 mt-2">
+          <div className="w-40 md:w-56 mt-1">
             <div
               className="relative h-[1.5px] w-full overflow-hidden rounded-full"
               style={{ background: "rgba(255,255,255,0.15)" }}

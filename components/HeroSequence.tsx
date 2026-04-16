@@ -1,6 +1,11 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useSpring,
+} from "framer-motion";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useScrollProgress } from "@/hooks/useScrollProgress";
@@ -541,7 +546,7 @@ export default function HeroSequence() {
 
             {/* CTA group — reveals only at end */}
             <div
-              className="mt-6 md:mt-8 flex flex-wrap items-center gap-2 md:gap-3 pointer-events-auto"
+              className="mt-6 md:mt-8 flex flex-wrap items-center gap-3 md:gap-4 pointer-events-auto"
               style={{
                 opacity: ctaO,
                 transform: `translateY(${ctaY}px)`,
@@ -549,18 +554,7 @@ export default function HeroSequence() {
                 pointerEvents: ctaO > 0.3 ? "auto" : "none",
               }}
             >
-              <motion.a
-                href="#kontakt"
-                whileHover={{ y: -2, scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                className="relative inline-flex items-center gap-2 rounded-full px-5 md:px-7 py-3 md:py-3.5 text-sm font-medium overflow-hidden"
-                style={{
-                  background: "var(--cream)",
-                  color: "var(--wood)",
-                  boxShadow: "0 20px 50px -20px rgba(0,0,0,0.5)",
-                }}
-              >
+              <MagneticCTA href="#kontakt" primary>
                 <span className="relative z-10">Gespräch anfragen</span>
                 <motion.span
                   className="relative z-10"
@@ -576,33 +570,24 @@ export default function HeroSequence() {
                 {/* Shimmer sweep */}
                 <motion.span
                   aria-hidden
-                  className="absolute inset-0 pointer-events-none"
+                  className="absolute inset-0 pointer-events-none rounded-full"
                   style={{
                     background:
-                      "linear-gradient(100deg, transparent 40%, rgba(255,255,255,0.55) 50%, transparent 60%)",
+                      "linear-gradient(100deg, transparent 40%, rgba(255,255,255,0.5) 50%, transparent 60%)",
                   }}
                   animate={{ x: ["-120%", "120%"] }}
                   transition={{
                     duration: 2.8,
                     repeat: Infinity,
-                    repeatDelay: 1.8,
+                    repeatDelay: 2,
                     ease: "easeInOut",
                   }}
                 />
-              </motion.a>
-              <a
-                href="#story"
-                className="hidden sm:inline-flex items-center gap-2 rounded-full px-5 md:px-6 py-3 md:py-3.5 text-sm font-medium"
-                style={{
-                  background: "rgba(245,237,216,0.08)",
-                  color: "var(--cream)",
-                  border: "1px solid rgba(245,237,216,0.3)",
-                  backdropFilter: "blur(10px)",
-                }}
-              >
+              </MagneticCTA>
+              <MagneticCTA href="#story" className="hidden sm:inline-flex">
                 Die Geschichte dahinter ↓
-              </a>
-              <div className="hidden md:block ml-2">
+              </MagneticCTA>
+              <div className="hidden md:block ml-1">
                 <VoiceNote label="30 Sek. von mir" />
               </div>
             </div>
@@ -703,6 +688,78 @@ export default function HeroSequence() {
         </div>
       </div>
     </section>
+  );
+}
+
+/* ─────────────────────────  MAGNETIC CTA  ───────────────────────── */
+
+function MagneticCTA({
+  href,
+  children,
+  primary,
+  className = "",
+}: {
+  href: string;
+  children: React.ReactNode;
+  primary?: boolean;
+  className?: string;
+}) {
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 220, damping: 16 });
+  const sy = useSpring(my, { stiffness: 220, damping: 16 });
+  const ref = useRef<HTMLAnchorElement>(null);
+
+  const onMove = (e: React.MouseEvent) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    mx.set((e.clientX - r.left - r.width / 2) * 0.28);
+    my.set((e.clientY - r.top - r.height / 2) * 0.28);
+  };
+  const onLeave = () => {
+    mx.set(0);
+    my.set(0);
+  };
+
+  return (
+    <motion.a
+      ref={ref}
+      href={href}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      whileTap={{ scale: 0.96 }}
+      style={{ x: sx, y: sy }}
+      className={`relative inline-flex items-center gap-2 rounded-full overflow-hidden text-sm font-medium ${
+        primary
+          ? "px-6 md:px-8 py-3.5 md:py-4 glow-border glow-border-sm"
+          : "px-5 md:px-6 py-3 md:py-3.5"
+      } ${className}`}
+    >
+      {/* Background fill */}
+      <span
+        className="absolute inset-0 rounded-full -z-0"
+        style={
+          primary
+            ? {
+                background: "var(--cream)",
+                boxShadow:
+                  "0 20px 50px -15px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.4)",
+              }
+            : {
+                background: "rgba(245,237,216,0.08)",
+                border: "1px solid rgba(245,237,216,0.3)",
+                backdropFilter: "blur(10px)",
+              }
+        }
+      />
+      <span
+        className="relative z-10 flex items-center gap-2"
+        style={{ color: primary ? "var(--wood)" : "var(--cream)" }}
+      >
+        {children}
+      </span>
+    </motion.a>
   );
 }
 
