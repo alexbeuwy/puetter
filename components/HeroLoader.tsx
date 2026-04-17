@@ -25,18 +25,11 @@ export default function HeroLoader({ loaded, total }: Props) {
       exit={{ opacity: 0, filter: "blur(14px)", scale: 1.04 }}
       transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
     >
-      {/* Shader — full-bleed, faded through a radial mask so the
-          center is brightest and the edges melt into ink */}
+      {/* Full-bleed holographic shader */}
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none"
-        style={{
-          opacity: 0.55,
-          maskImage:
-            "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)",
-        }}
+        style={{ opacity: 0.9 }}
       >
         <LiquidGradient
           speed={0.21}
@@ -47,13 +40,14 @@ export default function HeroLoader({ loaded, total }: Props) {
         />
       </div>
 
-      {/* Deep vignette darken so the logo has contrast */}
+      {/* Edge vignette — darkens corners so the center glow reads,
+          but lets the iridescent surface breathe everywhere */}
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 55% 45% at 50% 50%, rgba(6,8,15,0.35) 0%, rgba(6,8,15,0.92) 85%)",
+            "radial-gradient(ellipse 85% 75% at 50% 50%, rgba(6,8,15,0) 0%, rgba(6,8,15,0.35) 50%, rgba(6,8,15,0.85) 100%)",
         }}
       />
 

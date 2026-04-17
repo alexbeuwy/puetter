@@ -77,23 +77,17 @@ export default function Mechanism() {
             whileHover={{ y: -4 }}
             className="relative md:col-span-2 md:row-span-2 p-8 md:p-12 rounded-3xl flex flex-col justify-between overflow-hidden"
             style={{
-              background: "var(--wood)",
-              border: "1px solid rgba(255,255,255,0.06)",
+              background: "#0a0c14",
+              border: "1px solid rgba(255,255,255,0.08)",
               minHeight: "420px",
               color: "var(--cream)",
             }}
           >
-            {/* Hologram shader bleed in the top-right corner */}
+            {/* Full-card holographic shader background */}
             <div
               aria-hidden
-              className="absolute -top-20 -right-20 w-[420px] h-[420px] pointer-events-none"
-              style={{
-                opacity: 0.7,
-                maskImage:
-                  "radial-gradient(circle at center, rgba(0,0,0,1) 0%, transparent 70%)",
-                WebkitMaskImage:
-                  "radial-gradient(circle at center, rgba(0,0,0,1) 0%, transparent 70%)",
-              }}
+              className="absolute inset-0 pointer-events-none"
+              style={{ opacity: 0.85 }}
             >
               <LiquidGradient
                 speed={0.21}
@@ -103,6 +97,17 @@ export default function Mechanism() {
                 noise={0.05}
               />
             </div>
+
+            {/* Dark diagonal overlay — keeps the left text area readable
+                while letting the iridescent gradient breathe on the right */}
+            <div
+              aria-hidden
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(115deg, rgba(10,12,20,0.92) 0%, rgba(10,12,20,0.75) 35%, rgba(10,12,20,0.2) 75%, rgba(10,12,20,0) 100%)",
+              }}
+            />
 
             <div className="relative z-10">
               <div className="flex items-start justify-between mb-8">
