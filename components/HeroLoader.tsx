@@ -39,10 +39,11 @@ export default function HeroLoader({ loaded, total }: Props) {
         }}
       >
         <LiquidGradient
-          speed={0.25}
-          scale={0.25}
-          amplitude={0.5}
-          colors={["#c8d4ff", "#f4d0e0", "#d0f4d8", "#f0ecd0", "#c8d4ff"]}
+          speed={0.21}
+          scale={1.5}
+          softness={0.51}
+          intensity={0.6}
+          noise={0.05}
         />
       </div>
 

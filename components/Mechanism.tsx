@@ -96,10 +96,11 @@ export default function Mechanism() {
               }}
             >
               <LiquidGradient
-                speed={0.12}
-                scale={0.3}
-                amplitude={0.4}
-                colors={["#c8d4ff", "#f4d0e0", "#d0f4d8", "#f0ecd0", "#c8d4ff"]}
+                speed={0.21}
+                scale={1.5}
+                softness={0.51}
+                intensity={0.6}
+                noise={0.05}
               />
             </div>
 
