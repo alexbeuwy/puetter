@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import FadeIn from "./FadeIn";
-import LiquidGradient from "./LiquidGradient";
+import HologramShader from "./HologramShader";
 
 const ICON = "https://beuwy.com/wp-content/uploads/2025/11/Audit-Lupe-uai-258x258.webp";
 
@@ -166,12 +166,12 @@ function PillarCard({ pillar, index }: { pillar: Pillar; index: number }) {
             className="absolute inset-0 pointer-events-none"
             style={{ opacity: 0.9 }}
           >
-            <LiquidGradient
+            <HologramShader
               speed={0.21}
               scale={0.15}
-              softness={0.51}
-              intensity={0.6}
-              noise={0.05}
+              
+              
+              
             />
           </div>
           <div

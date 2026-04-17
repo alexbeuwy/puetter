@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import LiquidGradient from "./LiquidGradient";
+import HologramShader from "./HologramShader";
 import LogoMark from "./LogoMark";
 
 type Props = {
@@ -31,12 +31,7 @@ export default function HeroLoader({ loaded, total }: Props) {
         className="absolute inset-0 pointer-events-none"
         style={{ opacity: 0.9 }}
       >
-        <LiquidGradient
-          speed={0.21}
-          scale={0.15}
-          softness={0.51}
-          intensity={0.6}
-          noise={0.05}
+        <HologramShader
         />
       </div>
 
