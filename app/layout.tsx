@@ -1,21 +1,35 @@
 import type { Metadata } from "next";
-import { EB_Garamond, Rubik } from "next/font/google";
+import { EB_Garamond, Outfit, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
+// Outfit: geometric sans, close to Circular's feel — even x-height,
+// friendly-but-technical. The primary typeface for the hologram/
+// chrome brand direction.
+const sans = Outfit({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-sans",
+});
+
+// EB Garamond kept only for rare italic display accents inside
+// headlines (the "last word in italic" pattern). The brand is now
+// primarily sans-serif / technical.
 const serif = EB_Garamond({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-serif",
 });
 
-const sans = Rubik({
+// JetBrains Mono for numerals, progress counters, technical labels.
+const mono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500"],
   display: "swap",
-  variable: "--font-sans",
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -33,7 +47,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="de" className={`${serif.variable} ${sans.variable}`}>
+    <html
+      lang="de"
+      className={`${serif.variable} ${sans.variable} ${mono.variable}`}
+    >
       <head>
         <link rel="preload" as="image" href="/raft/Bretter.png" />
       </head>

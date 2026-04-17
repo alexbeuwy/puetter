@@ -3,15 +3,34 @@
 @tailwind utilities;
 
 :root {
-  --water: #7dd8d0;
-  --sand: #e8c5b8;
-  --sky: #c5e8e5;
-  --wood: #5c3d2e;
-  --rope: #c4a882;
-  --cream: #f5edd8;
-  --white: #f0ede8;
-  --text: #2c2015;
-  --text-muted: #5c4d3e;
+  /* ─── Hologram chrome palette ─── */
+  /* Dark base + cool off-whites + chrome greys. The 4 shader colors
+     (voltage/lime/citrus/ember) appear only as accents, never as
+     backgrounds — the shader itself carries the iridescent look. */
+
+  /* Semantic aliases (kept from v1 so existing components still
+     resolve, but the values are now cool/chrome instead of warm). */
+  --wood: #0a0c14;      /* near-black ink, the new "dark" */
+  --cream: #f4f5f8;     /* off-white cool, the new "light" */
+  --white: #fafbfc;     /* crisp white tint for base bg */
+  --sand: #d8dae0;      /* light chrome grey */
+  --sky: #e8eaf0;       /* subtle cool grey (backgrounds) */
+  --rope: #8c92a0;      /* muted cool grey for borders */
+  --water: #0051ff;     /* voltage — the accent */
+  --text: #0a0c14;
+  --text-muted: #4a5060;
+
+  /* ─── Shader / hologram accents (used for LiquidGradient + glow) ─ */
+  --voltage: #0051ff;
+  --lime: #4dff00;
+  --citrus: #ffe500;
+  --ember: #ff6f00;
+
+  /* Glass panel tokens */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-dark: rgba(10, 12, 20, 0.5);
+  --glass-border: rgba(10, 12, 20, 0.08);
+  --glass-border-dark: rgba(255, 255, 255, 0.12);
 }
 
 html,
@@ -25,30 +44,39 @@ body {
 }
 
 body {
-  font-size: 17px;
-  line-height: 1.75;
-  letter-spacing: -0.005em;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: -0.011em;
+  font-weight: 400;
 }
 
+/* Headlines now on Geist — technical, tight, chrome-feel.
+   Italic accents inside headlines keep EB Garamond via .font-serif-italic */
 h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-serif), Georgia, serif;
-  line-height: 1.05;
-  letter-spacing: -0.015em;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
   color: var(--text);
   font-weight: 500;
 }
 
-/* EB Garamond needs slightly larger sizing to balance Rubik body */
 .h1 {
   font-weight: 500;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
 }
 .h2 {
   font-weight: 500;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.03em;
+}
+
+/* Monospace for numerals, counters, technical meta */
+.font-mono,
+code,
+kbd {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
 }
 
 ::selection {
@@ -57,21 +85,43 @@ h4 {
 }
 
 /* Utility classes */
+.font-serif {
+  /* Override Tailwind's default serif — the brand is now technical.
+     Components that use .font-serif on headings still render Geist. */
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+}
 .font-serif-italic {
+  /* Keep EB Garamond only for the italic accent moments */
   font-family: var(--font-serif), Georgia, serif;
   font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.005em;
 }
 
 .eyebrow {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 6px 14px;
-  background: var(--sand);
+  background: rgba(10, 12, 20, 0.05);
   color: var(--text);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.02em;
   border-radius: 50px;
   margin-bottom: 24px;
+  border: 1px solid rgba(10, 12, 20, 0.08);
+  font-family: var(--font-mono), monospace;
+  text-transform: uppercase;
+}
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--voltage);
+  box-shadow: 0 0 8px var(--voltage);
 }
 
 .pull-quote {
@@ -91,10 +141,11 @@ h4 {
   gap: 8px;
   padding: 14px 28px;
   background: var(--wood);
-  color: var(--white);
+  color: var(--cream);
   border-radius: 50px;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 15px;
+  letter-spacing: -0.01em;
   transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
     background 300ms cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid var(--wood);
@@ -102,7 +153,7 @@ h4 {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  background: #4a3024;
+  background: #1a1f2e;
 }
 
 .btn-ghost {
@@ -200,14 +251,14 @@ h4 {
   border-radius: inherit;
   background: conic-gradient(
     from var(--glow-angle),
-    var(--water),
-    var(--sand),
-    var(--sky),
-    var(--cream),
-    var(--water)
+    var(--voltage),
+    var(--lime),
+    var(--citrus),
+    var(--ember),
+    var(--voltage)
   );
-  animation: glow-rotate 4s linear infinite,
-    glow-pulse 2.8s ease-in-out infinite;
+  animation: glow-rotate 5s linear infinite,
+    glow-pulse 3s ease-in-out infinite;
   z-index: -1;
   pointer-events: none;
 }

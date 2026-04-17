@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import FadeIn from "./FadeIn";
+import LiquidGradient from "./LiquidGradient";
 
 const ICON = "https://beuwy.com/wp-content/uploads/2025/11/Audit-Lupe-uai-258x258.webp";
 
@@ -74,14 +75,30 @@ export default function Mechanism() {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -4 }}
-            className="md:col-span-2 md:row-span-2 p-8 md:p-12 rounded-3xl flex flex-col justify-between"
+            className="relative md:col-span-2 md:row-span-2 p-8 md:p-12 rounded-3xl flex flex-col justify-between overflow-hidden"
             style={{
-              background: "var(--white)",
-              border: "1px solid rgba(196,168,130,0.3)",
+              background: "var(--wood)",
+              border: "1px solid rgba(255,255,255,0.06)",
               minHeight: "420px",
+              color: "var(--cream)",
             }}
           >
-            <div>
+            {/* Hologram shader bleed in the top-right corner */}
+            <div
+              aria-hidden
+              className="absolute -top-20 -right-20 w-[420px] h-[420px] pointer-events-none"
+              style={{
+                opacity: 0.7,
+                maskImage:
+                  "radial-gradient(circle at center, rgba(0,0,0,1) 0%, transparent 70%)",
+                WebkitMaskImage:
+                  "radial-gradient(circle at center, rgba(0,0,0,1) 0%, transparent 70%)",
+              }}
+            >
+              <LiquidGradient speed={0.18} scale={0.25} amplitude={0.5} />
+            </div>
+
+            <div className="relative z-10">
               <div className="flex items-start justify-between mb-8">
                 <div
                   className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center"
@@ -104,27 +121,37 @@ export default function Mechanism() {
                 </span>
               </div>
               <h3
-                className="font-serif mb-2"
-                style={{ fontSize: "clamp(28px, 3.5vw, 44px)", color: "var(--text)" }}
+                className="mb-2"
+                style={{
+                  fontSize: "clamp(28px, 3.5vw, 44px)",
+                  color: "var(--cream)",
+                  letterSpacing: "-0.03em",
+                  fontWeight: 500,
+                }}
               >
                 {PILLARS[0].title}
               </h3>
               <p
-                className="text-sm uppercase tracking-widest mb-5"
-                style={{ color: "var(--rope)" }}
+                className="font-mono text-[11px] uppercase tracking-[0.22em] mb-5"
+                style={{ color: "var(--voltage)" }}
               >
                 {PILLARS[0].subtitle}
               </p>
               <p
                 className="max-w-[50ch] leading-relaxed"
-                style={{ color: "var(--text-muted)" }}
+                style={{ color: "rgba(244,245,248,0.7)" }}
               >
                 {PILLARS[0].body}
               </p>
             </div>
             <div
-              className="mt-8 inline-flex items-center gap-2 self-start px-4 py-2.5 rounded-full"
-              style={{ background: "var(--sand)", color: "var(--text)" }}
+              className="relative z-10 mt-8 inline-flex items-center gap-2 self-start px-4 py-2.5 rounded-full"
+              style={{
+                background: "rgba(255,255,255,0.08)",
+                color: "var(--cream)",
+                border: "1px solid rgba(255,255,255,0.15)",
+                backdropFilter: "blur(10px)",
+              }}
             >
               <motion.span
                 animate={{ scale: [1, 1.4, 1], opacity: [1, 0.4, 1] }}
