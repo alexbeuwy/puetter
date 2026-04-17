@@ -62,7 +62,7 @@ export default function OriginStory() {
           {/* Vertical line — center on desktop, left on mobile */}
           <div
             className="absolute top-0 bottom-0 left-5 md:left-1/2 md:-translate-x-1/2 w-px"
-            style={{ background: "rgba(196,168,130,0.4)" }}
+            style={{ background: "rgba(140,146,160,0.4)" }}
           />
 
           <div className="space-y-10 md:space-y-16">
@@ -177,7 +177,7 @@ export default function OriginStory() {
                   className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center"
                   style={{
                     background: "var(--sand)",
-                    border: "1px solid rgba(196,168,130,0.4)",
+                    border: "1px solid rgba(140,146,160,0.4)",
                     color: "var(--wood)",
                   }}
                 >

@@ -350,7 +350,7 @@ export default function HeroSequence() {
             className="absolute top-0 left-0 right-0 h-[30%] pointer-events-none"
             style={{
               background:
-                "linear-gradient(180deg, rgba(44,32,21,0.75) 0%, rgba(44,32,21,0.25) 55%, rgba(44,32,21,0) 100%)",
+                "linear-gradient(180deg, rgba(10,12,20,0.75) 0%, rgba(10,12,20,0.25) 55%, rgba(10,12,20,0) 100%)",
             }}
           />
 
@@ -361,7 +361,7 @@ export default function HeroSequence() {
             className="absolute bottom-0 left-0 right-0 h-[55%] pointer-events-none"
             style={{
               background:
-                "linear-gradient(180deg, rgba(44,32,21,0) 0%, rgba(44,32,21,0.25) 40%, rgba(44,32,21,0.75) 75%, rgba(44,32,21,1) 100%)",
+                "linear-gradient(180deg, rgba(10,12,20,0) 0%, rgba(10,12,20,0.25) 40%, rgba(10,12,20,0.75) 75%, rgba(10,12,20,1) 100%)",
             }}
           />
 
@@ -371,7 +371,7 @@ export default function HeroSequence() {
             className="hidden md:block absolute inset-y-0 left-0 w-1/2 pointer-events-none"
             style={{
               background:
-                "linear-gradient(90deg, rgba(44,32,21,0.42) 0%, rgba(44,32,21,0) 100%)",
+                "linear-gradient(90deg, rgba(10,12,20,0.42) 0%, rgba(10,12,20,0) 100%)",
             }}
           />
 
@@ -379,13 +379,13 @@ export default function HeroSequence() {
           <div className="absolute top-0 left-0 right-0 px-5 md:px-14 pt-24 md:pt-28 flex items-center gap-3 md:gap-6 z-30">
             <span
               className="hidden sm:inline text-[11px] tracking-[0.22em] uppercase flex-shrink-0"
-              style={{ color: "rgba(245,237,216,0.75)" }}
+              style={{ color: "rgba(244,245,248,0.75)" }}
             >
               Für Unternehmer & Geschäftsführer
             </span>
             <div
               className="relative h-[2px] flex-1 overflow-hidden rounded-full"
-              style={{ background: "rgba(245,237,216,0.18)" }}
+              style={{ background: "rgba(244,245,248,0.18)" }}
             >
               <div
                 className="absolute left-0 top-0 h-full"
@@ -416,9 +416,9 @@ export default function HeroSequence() {
                       style={{
                         background: isActive
                           ? "var(--cream)"
-                          : "rgba(44,32,21,0.45)",
+                          : "rgba(10,12,20,0.45)",
                         border: `1px solid ${
-                          isActive ? "var(--cream)" : "rgba(245,237,216,0.35)"
+                          isActive ? "var(--cream)" : "rgba(244,245,248,0.35)"
                         }`,
                         transition: "all 500ms cubic-bezier(0.16, 1, 0.3, 1)",
                       }}
@@ -428,7 +428,7 @@ export default function HeroSequence() {
                       style={{
                         color: isActive
                           ? "var(--wood)"
-                          : "rgba(245,237,216,0.85)",
+                          : "rgba(244,245,248,0.85)",
                         transition: "color 400ms ease",
                       }}
                     >
@@ -440,7 +440,7 @@ export default function HeroSequence() {
                     style={{
                       color: isActive
                         ? "var(--cream)"
-                        : "rgba(245,237,216,0.4)",
+                        : "rgba(244,245,248,0.4)",
                       transition: "color 400ms ease",
                     }}
                   >
@@ -456,7 +456,7 @@ export default function HeroSequence() {
             <div
               className="absolute top-24 md:top-28 right-5 md:right-14 z-40 text-[10px] font-mono tracking-widest"
               style={{
-                color: "rgba(245,237,216,0.5)",
+                color: "rgba(244,245,248,0.5)",
                 opacity: loaded / TOTAL_FRAMES < 0.9 ? 1 : 0,
                 transition: "opacity 400ms ease",
               }}
@@ -493,11 +493,11 @@ export default function HeroSequence() {
               </span>
               <span
                 className="w-10 h-[1px]"
-                style={{ background: "rgba(245,237,216,0.6)" }}
+                style={{ background: "rgba(244,245,248,0.6)" }}
               />
               <span
                 className="text-[11px] tracking-[0.22em] uppercase"
-                style={{ color: "rgba(245,237,216,0.85)" }}
+                style={{ color: "rgba(244,245,248,0.85)" }}
               >
                 {active.eyebrow}
               </span>
@@ -535,7 +535,7 @@ export default function HeroSequence() {
               style={{
                 fontSize: "clamp(14px, 1.3vw, 20px)",
                 lineHeight: 1.55,
-                color: "rgba(245,237,216,0.85)",
+                color: "rgba(244,245,248,0.85)",
                 opacity: subO,
                 transform: `translateY(${subY}px)`,
                 willChange: "opacity, transform",
@@ -616,8 +616,8 @@ export default function HeroSequence() {
                   }}
                   className="flex-shrink-0 md:flex-shrink flex items-center gap-2 md:gap-4 px-3 md:px-5 py-2.5 md:py-4 rounded-full md:rounded-2xl backdrop-blur-md"
                   style={{
-                    background: "rgba(245,237,216,0.12)",
-                    border: "1px solid rgba(245,237,216,0.22)",
+                    background: "rgba(244,245,248,0.12)",
+                    border: "1px solid rgba(244,245,248,0.22)",
                     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15)",
                     // fade-out on chapter exit multiplies with the mount opacity
                     filter: `opacity(${row.O})`,
@@ -654,8 +654,8 @@ export default function HeroSequence() {
           <div
             className="flex flex-wrap items-center justify-center gap-x-2 md:gap-x-3 gap-y-1 px-4 md:px-5 py-2 rounded-full backdrop-blur-md"
             style={{
-              background: "rgba(44,32,21,0.45)",
-              border: "1px solid rgba(245,237,216,0.2)",
+              background: "rgba(10,12,20,0.45)",
+              border: "1px solid rgba(244,245,248,0.2)",
             }}
           >
             <span
@@ -747,8 +747,8 @@ function MagneticCTA({
                   "0 20px 50px -15px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.4)",
               }
             : {
-                background: "rgba(245,237,216,0.08)",
-                border: "1px solid rgba(245,237,216,0.3)",
+                background: "rgba(244,245,248,0.08)",
+                border: "1px solid rgba(244,245,248,0.3)",
                 backdropFilter: "blur(10px)",
               }
         }

@@ -23,7 +23,7 @@ export default function FinalCTA() {
         />
         <div
           className="absolute inset-0"
-          style={{ background: "rgba(245,237,216,0.75)" }}
+          style={{ background: "rgba(244,245,248,0.75)" }}
         />
       </div>
 
@@ -66,13 +66,13 @@ export default function FinalCTA() {
                   padding: "18px 40px",
                   fontSize: 17,
                   fontWeight: 500,
-                  boxShadow: "0 30px 60px -20px rgba(92,61,46,0.5)",
+                  boxShadow: "0 30px 60px -20px rgba(10,12,20,0.5)",
                 }}
               >
                 Gespräch anfragen
                 <span
                   className="inline-flex w-7 h-7 rounded-full items-center justify-center"
-                  style={{ background: "rgba(245,237,216,0.2)" }}
+                  style={{ background: "rgba(244,245,248,0.2)" }}
                 >
                   →
                 </span>

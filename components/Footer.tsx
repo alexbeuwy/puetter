@@ -96,7 +96,7 @@ export default function Footer() {
       <div
         className="mx-auto max-w-[1400px] mt-20 pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs"
         style={{
-          borderTop: "1px solid rgba(196,168,130,0.2)",
+          borderTop: "1px solid rgba(140,146,160,0.2)",
           color: "var(--rope)",
         }}
       >

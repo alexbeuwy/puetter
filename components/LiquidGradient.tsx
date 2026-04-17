@@ -25,11 +25,11 @@ type Props = {
 };
 
 const DEFAULT_COLORS: [string, string, string, string, string] = [
-  "#0051FF",
-  "#4DFF00",
-  "#FFE500",
-  "#FF6F00",
-  "#0051FF",
+  "#dce4f8",
+  "#f8dce4",
+  "#e4f8dc",
+  "#f0ece0",
+  "#dce4f8",
 ];
 
 function hexToRgb(hex: string): [number, number, number] {

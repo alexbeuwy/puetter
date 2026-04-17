@@ -95,7 +95,12 @@ export default function Mechanism() {
                   "radial-gradient(circle at center, rgba(0,0,0,1) 0%, transparent 70%)",
               }}
             >
-              <LiquidGradient speed={0.18} scale={0.25} amplitude={0.5} />
+              <LiquidGradient
+                speed={0.12}
+                scale={0.3}
+                amplitude={0.4}
+                colors={["#c8d4ff", "#f4d0e0", "#d0f4d8", "#f0ecd0", "#c8d4ff"]}
+              />
             </div>
 
             <div className="relative z-10">
@@ -179,7 +184,7 @@ export default function Mechanism() {
               className="p-6 md:p-8 rounded-3xl flex flex-col justify-between"
               style={{
                 background: "var(--white)",
-                border: "1px solid rgba(196,168,130,0.3)",
+                border: "1px solid rgba(140,146,160,0.3)",
               }}
             >
               <div>

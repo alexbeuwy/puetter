@@ -101,7 +101,7 @@ export default function Offer() {
                   ease: [0.16, 1, 0.3, 1],
                 }}
                 className="group flex items-start gap-5 py-5 border-b"
-                style={{ borderColor: "rgba(92,61,46,0.18)" }}
+                style={{ borderColor: "rgba(10,12,20,0.18)" }}
               >
                 <span
                   className="flex-shrink-0 mt-1"
@@ -146,8 +146,8 @@ export default function Offer() {
               style={{
                 background: "var(--white)",
                 borderRadius: 32,
-                border: "1px solid rgba(92,61,46,0.12)",
-                boxShadow: "0 40px 80px -30px rgba(92,61,46,0.2)",
+                border: "1px solid rgba(10,12,20,0.12)",
+                boxShadow: "0 40px 80px -30px rgba(10,12,20,0.2)",
               }}
             >
             {/* Small animated dot */}

@@ -48,7 +48,7 @@ export default function ProofStack() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at 20% 0%, rgba(196,168,130,0.18) 0%, transparent 60%)",
+            "radial-gradient(ellipse at 20% 0%, rgba(140,146,160,0.18) 0%, transparent 60%)",
         }}
       />
 
@@ -59,7 +59,7 @@ export default function ProofStack() {
             <FadeIn>
               <span
                 className="eyebrow"
-                style={{ background: "rgba(245,237,216,0.08)", color: "var(--rope)" }}
+                style={{ background: "rgba(244,245,248,0.08)", color: "var(--rope)" }}
               >
                 Zahlen, keine Versprechen
               </span>
@@ -103,7 +103,7 @@ export default function ProofStack() {
               >
                 <div
                   className="border-t pb-2 pt-6"
-                  style={{ borderColor: "rgba(196,168,130,0.3)" }}
+                  style={{ borderColor: "rgba(140,146,160,0.3)" }}
                 >
                   <div
                     className="font-serif-italic leading-none"

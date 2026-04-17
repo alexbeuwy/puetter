@@ -32,10 +32,10 @@ export default function Nav() {
         animate={{ scale: scrolled ? 0.94 : 1 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         style={{
-          background: "rgba(245,237,216,0.85)",
+          background: "rgba(244,245,248,0.85)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
-          border: "1px solid rgba(196,168,130,0.3)",
+          border: "1px solid rgba(140,146,160,0.3)",
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.5)",
         }}
         className="flex items-center gap-1 md:gap-2 rounded-full pl-5 pr-2 py-2 max-w-fit"
@@ -97,7 +97,7 @@ export default function Nav() {
           <Drawer.Portal>
             <Drawer.Overlay
               className="fixed inset-0 z-[59]"
-              style={{ background: "rgba(44,32,21,0.45)", backdropFilter: "blur(4px)" }}
+              style={{ background: "rgba(10,12,20,0.45)", backdropFilter: "blur(4px)" }}
             />
             <Drawer.Content
               className="fixed right-0 top-0 bottom-0 z-[60] flex flex-col outline-none w-full sm:w-[420px]"

@@ -38,7 +38,12 @@ export default function HeroLoader({ loaded, total }: Props) {
             "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)",
         }}
       >
-        <LiquidGradient speed={0.35} scale={0.2} amplitude={0.7} />
+        <LiquidGradient
+          speed={0.25}
+          scale={0.25}
+          amplitude={0.5}
+          colors={["#c8d4ff", "#f4d0e0", "#d0f4d8", "#f0ecd0", "#c8d4ff"]}
+        />
       </div>
 
       {/* Deep vignette darken so the logo has contrast */}

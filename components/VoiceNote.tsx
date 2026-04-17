@@ -101,9 +101,9 @@ export default function VoiceNote({
       aria-label={playing ? "Stoppen" : "Abspielen"}
       className="group inline-flex items-center gap-3 pl-1.5 pr-5 py-1.5 rounded-full"
       style={{
-        background: "rgba(245,237,216,0.7)",
+        background: "rgba(244,245,248,0.7)",
         backdropFilter: "blur(12px)",
-        border: "1px solid rgba(196,168,130,0.4)",
+        border: "1px solid rgba(140,146,160,0.4)",
         boxShadow: "inset 0 1px 0 rgba(255,255,255,0.5)",
       }}
     >
@@ -114,7 +114,7 @@ export default function VoiceNote({
             cy="20"
             r={R}
             fill="none"
-            stroke="rgba(196,168,130,0.35)"
+            stroke="rgba(140,146,160,0.35)"
             strokeWidth="1.5"
           />
           <circle

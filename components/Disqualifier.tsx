@@ -58,9 +58,9 @@ export default function Disqualifier() {
               className="relative p-8 md:p-10 rounded-3xl h-full"
               style={{
                 background: "var(--white)",
-                border: "1px solid rgba(196,168,130,0.3)",
+                border: "1px solid rgba(140,146,160,0.3)",
                 boxShadow:
-                  "0 30px 60px -20px rgba(92,61,46,0.12)",
+                  "0 30px 60px -20px rgba(10,12,20,0.12)",
               }}
             >
               {/* Red accent glow */}
@@ -133,9 +133,9 @@ export default function Disqualifier() {
               className="relative p-8 md:p-10 rounded-3xl h-full"
               style={{
                 background: "var(--wood)",
-                border: "1px solid rgba(196,168,130,0.2)",
+                border: "1px solid rgba(140,146,160,0.2)",
                 boxShadow:
-                  "0 30px 60px -20px rgba(92,61,46,0.25)",
+                  "0 30px 60px -20px rgba(10,12,20,0.25)",
               }}
             >
               {/* Teal accent glow */}

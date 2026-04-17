@@ -63,7 +63,7 @@ export default function LeadMagnet() {
             className="relative mx-auto max-w-[520px] flex items-center p-1.5"
             style={{
               background: "var(--white)",
-              border: "1px solid rgba(196,168,130,0.6)",
+              border: "1px solid rgba(140,146,160,0.6)",
               borderRadius: 999,
               boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6)",
             }}

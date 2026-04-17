@@ -91,7 +91,7 @@ export default function PainSection() {
                   className="flex items-start gap-6 md:gap-8 p-6 md:p-8 rounded-2xl md:rounded-3xl"
                   style={{
                     background: "var(--cream)",
-                    border: "1px solid rgba(196,168,130,0.3)",
+                    border: "1px solid rgba(140,146,160,0.3)",
                     transition: "border-color 300ms ease",
                   }}
                 >

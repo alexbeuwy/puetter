@@ -36,8 +36,8 @@ export default function ScarcityBar() {
       style={{
         background: "var(--wood)",
         color: "var(--cream)",
-        borderTop: "1px solid rgba(196,168,130,0.2)",
-        borderBottom: "1px solid rgba(196,168,130,0.2)",
+        borderTop: "1px solid rgba(140,146,160,0.2)",
+        borderBottom: "1px solid rgba(140,146,160,0.2)",
       }}
     >
       <motion.div

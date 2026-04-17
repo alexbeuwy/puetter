@@ -35,7 +35,7 @@ export default function DreamState() {
         className="absolute -top-40 -right-40 w-[640px] h-[640px] rounded-full pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle at center, rgba(245,237,216,0.6) 0%, rgba(197,232,229,0) 65%)",
+            "radial-gradient(circle at center, rgba(244,245,248,0.6) 0%, rgba(232,234,240,0) 65%)",
           filter: "blur(20px)",
         }}
       />
@@ -111,8 +111,8 @@ export default function DreamState() {
                 }}
                 className="flex items-start gap-4 p-5 rounded-2xl"
                 style={{
-                  background: "rgba(245,237,216,0.5)",
-                  border: "1px solid rgba(196,168,130,0.3)",
+                  background: "rgba(244,245,248,0.5)",
+                  border: "1px solid rgba(140,146,160,0.3)",
                 }}
               >
                 <div

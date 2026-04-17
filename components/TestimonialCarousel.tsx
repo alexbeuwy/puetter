@@ -105,7 +105,7 @@ export default function TestimonialCarousel({
               style={{
                 width: i === selected ? 44 : 16,
                 background:
-                  i === selected ? "var(--cream)" : "rgba(196,168,130,0.4)",
+                  i === selected ? "var(--cream)" : "rgba(140,146,160,0.4)",
               }}
             />
           ))}
@@ -116,7 +116,7 @@ export default function TestimonialCarousel({
             onClick={() => emblaApi?.scrollPrev()}
             aria-label="Vorheriges Testimonial"
             className="w-11 h-11 rounded-full flex items-center justify-center transition-transform hover:-translate-y-[1px]"
-            style={{ border: "1px solid rgba(196,168,130,0.4)" }}
+            style={{ border: "1px solid rgba(140,146,160,0.4)" }}
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--cream)" strokeWidth="1.5">
               <path d="M9 2 L3 7 L9 12" strokeLinecap="round" strokeLinejoin="round" />

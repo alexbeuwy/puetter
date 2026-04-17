@@ -53,13 +53,13 @@ export default function FAQ() {
         </aside>
 
         <div className="md:col-span-7">
-          <ul className="divide-y" style={{ borderColor: "rgba(196,168,130,0.3)" }}>
+          <ul className="divide-y" style={{ borderColor: "rgba(140,146,160,0.3)" }}>
             {ITEMS.map((item, i) => {
               const isOpen = open === i;
               return (
                 <li
                   key={item.q}
-                  style={{ borderBottom: "1px solid rgba(196,168,130,0.3)" }}
+                  style={{ borderBottom: "1px solid rgba(140,146,160,0.3)" }}
                 >
                   <FadeIn delay={i * 0.06}>
                     <button
