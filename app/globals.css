@@ -91,11 +91,12 @@ kbd {
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
 }
 .font-serif-italic {
-  /* Keep EB Garamond only for the italic accent moments */
+  /* EB Garamond NORMAL — used for accent words within sans headlines.
+     Kept the class name for backward compat; the style is no longer italic. */
   font-family: var(--font-serif), Georgia, serif;
-  font-style: italic;
-  font-weight: 500;
-  letter-spacing: -0.005em;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.015em;
 }
 
 .eyebrow {

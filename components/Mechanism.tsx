@@ -13,6 +13,7 @@ type Pillar = {
   subtitle: string;
   body: string;
   badge: string;
+  featured?: boolean;
 };
 
 const PILLARS: Pillar[] = [
@@ -20,230 +21,274 @@ const PILLARS: Pillar[] = [
     num: "01",
     title: "Das Ruder",
     subtitle: "Positionierung & Klarheit",
-    body: "Wer du bist, für wen, und warum ausgerechnet du? Solange das nicht sitzt, verpufft alles andere. Jedes Tool, jedes Posting, jeder Pitch — ohne Richtung nur Lärm.",
+    body: "Wer du bist, für wen, und warum ausgerechnet du. Solange das nicht sitzt, verpufft alles andere. Jedes Tool, jedes Posting, jeder Pitch — ohne Richtung nur Lärm.",
     badge: "Du erklärst in 30 Sek. was du tust",
+    featured: true,
   },
   {
     num: "02",
     title: "Das Fundament",
     subtitle: "Brand & Content-System",
-    body: "Deine Sichtbarkeit läuft im Hintergrund. Content, der nach dir klingt — nicht nach einem Prompt. Arbeitet, wenn du schläfst.",
+    body: "Sichtbarkeit läuft im Hintergrund. Content, der nach dir klingt — nicht nach einem Prompt. Arbeitet, wenn du schläfst.",
     badge: "Kunden kommen vorbereitet",
   },
   {
     num: "03",
     title: "Der Motor",
     subtitle: "Planbare Akquise",
-    body: "Wenn Ruder und Fundament stehen, macht Geschwindigkeit Sinn. Lead-Qualifizierung, Sequenzen, Pipeline — systematisch.",
+    body: "Wenn Ruder und Fundament stehen, macht Tempo Sinn. Lead-Qualifizierung, Sequenzen, Pipeline — systematisch.",
     badge: "Planbare Anfragen. Kein Zufall.",
   },
 ];
 
+/**
+ * Framer /design-style layout:
+ *   Left column  — ONE big headline + support text (sticky on desktop)
+ *   Right column — stacked cards (3), featured first card oversized
+ * Consistent rhythm, consulting-clean.
+ */
 export default function Mechanism() {
   return (
     <section
-      className="relative py-28 md:py-40 px-6 md:px-10 overflow-hidden"
-      style={{ background: "var(--cream)" }}
+      id="system"
+      className="relative py-28 md:py-40 px-6 md:px-10"
+      style={{ background: "var(--white)" }}
     >
-      <div className="relative mx-auto max-w-[1400px]">
-        {/* Header */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-16 md:mb-24">
-          <div className="md:col-start-2 md:col-span-7">
-            <FadeIn>
-              <span className="eyebrow">Wie es funktioniert</span>
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <h2 className="h2 font-serif leading-[1.05] max-w-[20ch]">
-                Drei Dinge.
-                <br />
-                In dieser Reihenfolge.
-                <br />
-                <span className="font-serif-italic" style={{ color: "var(--wood)" }}>
-                  Immer.
-                </span>
-              </h2>
-            </FadeIn>
-          </div>
-        </div>
-
-        {/* Bento grid: first card large (2/3), second + third stacked (1/3) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-          {/* Card 1 — large, spans 2 cols */}
-          <motion.div
-            initial={{ y: 40, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            whileHover={{ y: -4 }}
-            className="relative md:col-span-2 md:row-span-2 p-8 md:p-12 rounded-3xl flex flex-col justify-between overflow-hidden"
-            style={{
-              background: "#0a0c14",
-              border: "1px solid rgba(255,255,255,0.08)",
-              minHeight: "420px",
-              color: "var(--cream)",
-            }}
-          >
-            {/* Full-card holographic shader background */}
-            <div
-              aria-hidden
-              className="absolute inset-0 pointer-events-none"
-              style={{ opacity: 0.85 }}
-            >
-              <LiquidGradient
-                speed={0.21}
-                scale={1.5}
-                softness={0.51}
-                intensity={0.6}
-                noise={0.05}
-              />
-            </div>
-
-            {/* Dark diagonal overlay — keeps the left text area readable
-                while letting the iridescent gradient breathe on the right */}
-            <div
-              aria-hidden
-              className="absolute inset-0 pointer-events-none"
+      <div className="relative mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
+        {/* LEFT: one headline, sticky */}
+        <div className="md:col-start-2 md:col-span-5 md:sticky md:top-28 md:self-start md:pt-8">
+          <FadeIn>
+            <span className="eyebrow">Das System</span>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <h2
+              className="h2 mt-4"
               style={{
-                background:
-                  "linear-gradient(115deg, rgba(10,12,20,0.92) 0%, rgba(10,12,20,0.75) 35%, rgba(10,12,20,0.2) 75%, rgba(10,12,20,0) 100%)",
+                color: "var(--text)",
+                letterSpacing: "-0.035em",
+                fontWeight: 600,
+                lineHeight: 1.02,
               }}
-            />
-
-            <div className="relative z-10">
-              <div className="flex items-start justify-between mb-8">
-                <div
-                  className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center"
-                  style={{ background: "var(--sand)" }}
-                >
-                  <Image
-                    src={ICON}
-                    alt=""
-                    width={64}
-                    height={64}
-                    className="w-10 h-10 object-contain"
-                    unoptimized
-                  />
-                </div>
-                <span
-                  className="font-serif-italic leading-none"
-                  style={{ fontSize: 72, color: "var(--rope)", opacity: 0.3 }}
-                >
-                  {PILLARS[0].num}
-                </span>
-              </div>
-              <h3
-                className="mb-2"
+            >
+              Drei Hebel.
+              <br />
+              In einer festen
+              <br />
+              <span
+                className="font-serif"
                 style={{
-                  fontSize: "clamp(28px, 3.5vw, 44px)",
-                  color: "var(--cream)",
-                  letterSpacing: "-0.03em",
-                  fontWeight: 500,
+                  fontFamily: "var(--font-serif)",
+                  fontWeight: 400,
+                  letterSpacing: "-0.02em",
                 }}
               >
-                {PILLARS[0].title}
-              </h3>
-              <p
-                className="font-mono text-[11px] uppercase tracking-[0.22em] mb-5"
-                style={{ color: "var(--voltage)" }}
-              >
-                {PILLARS[0].subtitle}
-              </p>
-              <p
-                className="max-w-[50ch] leading-relaxed"
-                style={{ color: "rgba(244,245,248,0.7)" }}
-              >
-                {PILLARS[0].body}
-              </p>
-            </div>
-            <div
-              className="relative z-10 mt-8 inline-flex items-center gap-2 self-start px-4 py-2.5 rounded-full"
+                Reihenfolge.
+              </span>
+            </h2>
+          </FadeIn>
+          <FadeIn delay={0.18}>
+            <p
+              className="mt-8 max-w-[46ch]"
               style={{
-                background: "rgba(255,255,255,0.08)",
-                color: "var(--cream)",
-                border: "1px solid rgba(255,255,255,0.15)",
-                backdropFilter: "blur(10px)",
+                color: "var(--text-muted)",
+                lineHeight: 1.55,
+                fontSize: 17,
               }}
             >
-              <motion.span
-                animate={{ scale: [1, 1.4, 1], opacity: [1, 0.4, 1] }}
-                transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: "var(--wood)" }}
-              />
-              <span className="text-xs font-medium">{PILLARS[0].badge}</span>
-            </div>
-          </motion.div>
+              Kein Baukasten. Kein Funnel-Template. Drei aufeinander
+              aufbauende Schritte, die jeder seriöse Operator kennt — aber
+              die meisten in falscher Reihenfolge angehen.
+            </p>
+          </FadeIn>
 
-          {/* Cards 2 + 3 — stacked right, each 1 col */}
-          {PILLARS.slice(1).map((p, i) => (
-            <motion.div
-              key={p.num}
-              initial={{ y: 40, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{
-                duration: 0.8,
-                delay: 0.1 + i * 0.08,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              whileHover={{ y: -4 }}
-              className="p-6 md:p-8 rounded-3xl flex flex-col justify-between"
-              style={{
-                background: "var(--white)",
-                border: "1px solid rgba(140,146,160,0.3)",
-              }}
+          <FadeIn delay={0.26}>
+            <div
+              className="mt-10 flex items-center gap-3 pt-6"
+              style={{ borderTop: "1px solid rgba(10,12,20,0.08)" }}
             >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div
-                    className="w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center"
-                    style={{ background: "var(--sand)" }}
-                  >
-                    <Image
-                      src={ICON}
-                      alt=""
-                      width={48}
-                      height={48}
-                      className="w-8 h-8 object-contain"
-                      unoptimized
-                    />
-                  </div>
-                  <span
-                    className="font-serif-italic text-4xl leading-none"
-                    style={{ color: "var(--rope)", opacity: 0.3 }}
-                  >
-                    {p.num}
-                  </span>
-                </div>
-                <h3
-                  className="font-serif text-2xl md:text-3xl mb-1"
-                  style={{ color: "var(--text)" }}
-                >
-                  {p.title}
-                </h3>
-                <p
-                  className="text-xs uppercase tracking-widest mb-4"
-                  style={{ color: "var(--rope)" }}
-                >
-                  {p.subtitle}
-                </p>
-                <p
-                  className="text-sm leading-relaxed"
-                  style={{ color: "var(--text-muted)" }}
-                >
-                  {p.body}
-                </p>
-              </div>
-              <div
-                className="mt-5 inline-flex items-center gap-2 self-start px-3 py-2 rounded-full"
-                style={{ background: "var(--sand)", color: "var(--text)" }}
+              <span
+                className="font-mono text-[11px] tracking-[0.22em] uppercase"
+                style={{ color: "var(--text-muted)" }}
               >
-                <span className="text-[11px] font-medium">{p.badge}</span>
-              </div>
-            </motion.div>
+                01 · 02 · 03
+              </span>
+              <span
+                className="font-mono text-[11px] tracking-[0.22em] uppercase ml-auto"
+                style={{ color: "var(--text-muted)" }}
+              >
+                in dieser Reihenfolge
+              </span>
+            </div>
+          </FadeIn>
+        </div>
+
+        {/* RIGHT: stacked cards */}
+        <div className="md:col-span-5 flex flex-col gap-4">
+          {PILLARS.map((p, i) => (
+            <PillarCard key={p.num} pillar={p} index={i} />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function PillarCard({ pillar, index }: { pillar: Pillar; index: number }) {
+  const isFeatured = pillar.featured;
+
+  return (
+    <motion.article
+      initial={{ y: 40, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{
+        duration: 0.8,
+        delay: index * 0.1,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      whileHover={{ y: -3 }}
+      className="relative rounded-3xl overflow-hidden"
+      style={{
+        background: isFeatured ? "#0a0c14" : "var(--white)",
+        border: isFeatured
+          ? "1px solid rgba(255,255,255,0.08)"
+          : "1px solid rgba(10,12,20,0.08)",
+        boxShadow: isFeatured
+          ? "0 30px 60px -20px rgba(10,12,20,0.25)"
+          : "0 4px 12px -4px rgba(10,12,20,0.06)",
+        color: isFeatured ? "var(--cream)" : "var(--text)",
+      }}
+    >
+      {isFeatured && (
+        <>
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{ opacity: 0.9 }}
+          >
+            <LiquidGradient
+              speed={0.21}
+              scale={0.15}
+              softness={0.51}
+              intensity={0.6}
+              noise={0.05}
+            />
+          </div>
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(160deg, rgba(10,12,20,0.88) 0%, rgba(10,12,20,0.55) 45%, rgba(10,12,20,0.15) 100%)",
+            }}
+          />
+        </>
+      )}
+
+      <div className="relative z-10 p-7 md:p-9">
+        {/* Top row: icon + number */}
+        <div className="flex items-start justify-between mb-6">
+          <div
+            className="w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center"
+            style={{
+              background: isFeatured ? "rgba(255,255,255,0.08)" : "var(--sand)",
+              border: isFeatured
+                ? "1px solid rgba(255,255,255,0.15)"
+                : "none",
+            }}
+          >
+            <Image
+              src={ICON}
+              alt=""
+              width={48}
+              height={48}
+              className="w-8 h-8 object-contain"
+              unoptimized
+            />
+          </div>
+          <span
+            className="font-mono text-[11px] tracking-[0.22em]"
+            style={{
+              color: isFeatured
+                ? "rgba(244,245,248,0.5)"
+                : "var(--text-muted)",
+            }}
+          >
+            {pillar.num}
+          </span>
+        </div>
+
+        {/* Title */}
+        <h3
+          className="mb-1"
+          style={{
+            fontSize: isFeatured
+              ? "clamp(26px, 2.6vw, 36px)"
+              : "clamp(22px, 2vw, 28px)",
+            letterSpacing: "-0.03em",
+            fontWeight: 600,
+            color: isFeatured ? "var(--cream)" : "var(--text)",
+            lineHeight: 1.05,
+          }}
+        >
+          {pillar.title}
+        </h3>
+
+        {/* Subtitle */}
+        <p
+          className="font-mono text-[11px] uppercase tracking-[0.22em] mb-4"
+          style={{
+            color: isFeatured ? "var(--voltage)" : "var(--text-muted)",
+          }}
+        >
+          {pillar.subtitle}
+        </p>
+
+        {/* Body */}
+        <p
+          className="mb-6 max-w-[52ch]"
+          style={{
+            color: isFeatured
+              ? "rgba(244,245,248,0.75)"
+              : "var(--text-muted)",
+            lineHeight: 1.6,
+            fontSize: 15,
+          }}
+        >
+          {pillar.body}
+        </p>
+
+        {/* Badge */}
+        <div
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full"
+          style={{
+            background: isFeatured
+              ? "rgba(255,255,255,0.08)"
+              : "rgba(10,12,20,0.05)",
+            border: isFeatured
+              ? "1px solid rgba(255,255,255,0.15)"
+              : "1px solid rgba(10,12,20,0.08)",
+            color: isFeatured ? "var(--cream)" : "var(--text)",
+            backdropFilter: isFeatured ? "blur(10px)" : "none",
+          }}
+        >
+          <motion.span
+            animate={{ scale: [1, 1.4, 1], opacity: [1, 0.4, 1] }}
+            transition={{
+              duration: 2.2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="w-1.5 h-1.5 rounded-full"
+            style={{
+              background: isFeatured ? "var(--voltage)" : "var(--text)",
+            }}
+          />
+          <span className="text-[11px] font-medium tracking-tight">
+            {pillar.badge}
+          </span>
+        </div>
+      </div>
+    </motion.article>
   );
 }
