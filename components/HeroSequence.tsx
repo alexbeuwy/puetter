@@ -506,7 +506,7 @@ export default function HeroSequence() {
             <h1
               className="font-serif leading-[1.02] tracking-tight max-w-[14ch] md:max-w-[18ch]"
               style={{
-                fontSize: "clamp(38px, 9vw, 104px)",
+                fontSize: "clamp(32px, 6vw, 72px)",
                 color: "var(--cream)",
                 opacity: headO,
                 transform: `translateY(${headY}px)`,
